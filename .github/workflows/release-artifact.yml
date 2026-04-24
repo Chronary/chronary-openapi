@@ -1,0 +1,53 @@
+name: Release Artifact
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate release manifest
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          manifest = json.load(open(".chronary-release.json", "r", encoding="utf-8"))
+          if manifest["artifact"] != "openapi":
+              raise SystemExit("Expected artifact openapi")
+          if manifest["public_tag"] != os.environ["GITHUB_REF_NAME"]:
+              raise SystemExit("Tag mismatch between manifest and workflow ref")
+          PY
+          test -f RELEASE_NOTES.txt
+
+      - name: Validate spec
+        run: test -f openapi.json
+
+      - name: Generate checksum
+        run: sha256sum openapi.json > openapi.sha256
+
+      - name: Attest build provenance for spec snapshot
+        # Free-tier orgs can only attest in PUBLIC repos. Auto-enables on flip.
+        if: github.event.repository.visibility == 'public'
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'openapi.json'
+
+      - name: Create GitHub Release
+        run: |
+          gh release create "${GITHUB_REF_NAME}" openapi.json openapi.sha256 \
+            --title "chronary-openapi ${GITHUB_REF_NAME}" \
+            --notes-file RELEASE_NOTES.txt
