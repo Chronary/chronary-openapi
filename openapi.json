@@ -775,121 +775,211 @@
             "type": "string",
             "example": "free"
           },
-          "period": {
+          "period_start": {
             "type": "string",
-            "example": "2025-01"
+            "format": "date-time",
+            "example": "2026-04-01T00:00:00.000Z"
           },
-          "usage": {
+          "period_end": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-04-30T23:59:59.000Z"
+          },
+          "agents": {
             "type": "object",
             "properties": {
-              "agents": {
-                "type": "integer",
-                "example": 2
-              },
-              "calendars": {
-                "type": "integer",
-                "example": 4
-              },
-              "events": {
+              "used": {
                 "type": "integer",
                 "example": 120
               },
-              "api_calls": {
-                "type": "integer",
-                "example": 3400
-              },
-              "webhook_deliveries": {
-                "type": "integer",
-                "example": 200
-              },
-              "availability_queries": {
-                "type": "integer",
-                "example": 50
-              },
-              "ical_subscriptions": {
-                "type": "integer",
-                "example": 1
+              "limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "`null` means unlimited.",
+                "example": 5000
               }
             },
             "required": [
-              "agents",
-              "calendars",
-              "events",
-              "api_calls",
-              "webhook_deliveries",
-              "availability_queries",
-              "ical_subscriptions"
+              "used",
+              "limit"
             ]
           },
-          "limits": {
+          "calendars": {
             "type": "object",
             "properties": {
-              "agents": {
-                "type": [
-                  "integer",
-                  "null"
-                ],
-                "example": 5
+              "used": {
+                "type": "integer",
+                "example": 120
               },
-              "calendars": {
+              "limit": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 10
-              },
-              "events": {
-                "type": [
-                  "integer",
-                  "null"
-                ],
+                "description": "`null` means unlimited.",
                 "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "events": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
               },
-              "api_calls": {
+              "limit": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 50000
+                "description": "`null` means unlimited.",
+                "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "api_calls": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
               },
-              "webhook_deliveries": {
+              "limit": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 10000
+                "description": "`null` means unlimited.",
+                "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "webhooks": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
               },
-              "availability_queries": {
+              "limit": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 10000
+                "description": "`null` means unlimited.",
+                "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "availability_queries": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
               },
-              "ical_subscriptions": {
+              "limit": {
                 "type": [
                   "integer",
                   "null"
                 ],
+                "description": "`null` means unlimited.",
+                "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "ical_subscriptions": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
+              },
+              "limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "`null` means unlimited.",
+                "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "proposals": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
+              },
+              "limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "description": "`null` means unlimited.",
+                "example": 5000
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ]
+          },
+          "scoped_keys": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
                 "example": 3
               }
             },
             "required": [
-              "agents",
-              "calendars",
-              "events",
-              "api_calls",
-              "webhook_deliveries",
-              "availability_queries",
-              "ical_subscriptions"
-            ]
+              "count"
+            ],
+            "description": "Active agent-scoped (`chr_ak_*`) keys. Unlike quotas, this is a direct count with no plan limit."
           }
         },
         "required": [
           "plan",
-          "period",
-          "usage",
-          "limits"
+          "period_start",
+          "period_end",
+          "agents",
+          "calendars",
+          "events",
+          "api_calls",
+          "webhooks",
+          "availability_queries",
+          "ical_subscriptions",
+          "proposals",
+          "scoped_keys"
         ]
       },
       "ScopedApiKey": {
@@ -1779,6 +1869,73 @@
           }
         }
       },
+      "TermsVersion": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "example": "pre-launch"
+          },
+          "effective_at": {
+            "type": "string",
+            "example": "2026-04-17"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://chronary.ai/terms/v/pre-launch"
+          },
+          "material": {
+            "type": "boolean",
+            "description": "When `true`, clients should block on re-acceptance."
+          }
+        },
+        "required": [
+          "version",
+          "effective_at",
+          "url",
+          "material"
+        ]
+      },
+      "ReacceptRequest": {
+        "type": "object",
+        "properties": {
+          "tos_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Must equal `CURRENT_TERMS_VERSION`.",
+            "example": "pre-launch"
+          }
+        },
+        "required": [
+          "tos_version"
+        ]
+      },
+      "ReacceptResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "accepted_terms_version": {
+                "type": "string",
+                "example": "pre-launch"
+              },
+              "accepted_terms_at": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2026-04-24T02:30:00.000Z"
+              }
+            },
+            "required": [
+              "accepted_terms_version",
+              "accepted_terms_at"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "WebhookCreated": {
         "allOf": [
           {
@@ -2587,6 +2744,104 @@
           },
           "304": {
             "description": "ETag matched — no body"
+          }
+        }
+      }
+    },
+    "/v1/auth/terms/current": {
+      "get": {
+        "summary": "Get current Terms of Service version",
+        "description": "Returns the latest ToS manifest entry. No authentication required — intended for CLIs, SDKs, and agent-signup flows that need to read the current version at runtime rather than rely on a build-time constant.",
+        "tags": [
+          "Terms"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Current ToS manifest entry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TermsVersion"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/terms": {
+      "patch": {
+        "summary": "Accept the current Terms of Service",
+        "description": "Appends an immutable row to `tos_acceptances` (source=`reaccept`) capturing the accepting org, client IP, user-agent, and the ToS document SHA-256, then updates the denormalized `accepted_terms_version` / `accepted_terms_at` columns on the organization. Authenticated via JWT (console session cookie or Bearer token), not an API key.",
+        "tags": [
+          "Terms"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReacceptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Re-acceptance recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReacceptResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ToS version stale — the submitted `tos_version` does not match `CURRENT_TERMS_VERSION`. Response body includes a `current_version` field on the `error` object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
