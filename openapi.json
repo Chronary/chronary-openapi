@@ -1874,15 +1874,15 @@
         "properties": {
           "version": {
             "type": "string",
-            "example": "pre-launch"
+            "example": "2026-04-26"
           },
           "effective_at": {
             "type": "string",
-            "example": "2026-04-17"
+            "example": "2026-04-26"
           },
           "url": {
             "type": "string",
-            "example": "https://chronary.ai/terms/v/pre-launch"
+            "example": "https://chronary.ai/terms/v/2026-04-26"
           },
           "material": {
             "type": "boolean",
@@ -1903,7 +1903,7 @@
             "type": "string",
             "minLength": 1,
             "description": "Must equal `CURRENT_TERMS_VERSION`.",
-            "example": "pre-launch"
+            "example": "2026-04-26"
           }
         },
         "required": [
@@ -1918,7 +1918,7 @@
             "properties": {
               "accepted_terms_version": {
                 "type": "string",
-                "example": "pre-launch"
+                "example": "2026-04-26"
               },
               "accepted_terms_at": {
                 "type": "string",
@@ -1934,6 +1934,373 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "DataExport": {
+        "type": "object",
+        "properties": {
+          "exported_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "format_version": {
+            "type": "string",
+            "enum": [
+              "1"
+            ]
+          },
+          "org": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "plan": {
+                "type": "string"
+              },
+              "signup_source": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "oauth_provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "oauth_provider_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "email_verified": {
+                "type": "boolean"
+              },
+              "onboarding_completed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "accepted_terms_version": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "accepted_terms_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "email",
+              "plan",
+              "signup_source",
+              "status",
+              "oauth_provider",
+              "oauth_provider_id",
+              "email_verified",
+              "onboarding_completed_at",
+              "accepted_terms_version",
+              "accepted_terms_at",
+              "created_at",
+              "updated_at"
+            ]
+          },
+          "agents": {
+            "type": "array",
+            "items": {}
+          },
+          "calendars": {
+            "type": "array",
+            "items": {}
+          },
+          "events": {
+            "type": "array",
+            "items": {}
+          },
+          "availability_rules": {
+            "type": "array",
+            "items": {}
+          },
+          "ical_subscriptions": {
+            "type": "array",
+            "items": {}
+          },
+          "webhook_subscriptions": {
+            "type": "array",
+            "items": {}
+          },
+          "api_keys": {
+            "type": "array",
+            "items": {}
+          },
+          "scheduling_proposals": {
+            "type": "array",
+            "items": {}
+          },
+          "proposal_slots": {
+            "type": "array",
+            "items": {}
+          },
+          "proposal_responses": {
+            "type": "array",
+            "items": {}
+          },
+          "usage_records": {
+            "type": "array",
+            "items": {}
+          },
+          "quota_counters": {
+            "type": "array",
+            "items": {}
+          },
+          "tos_acceptances": {
+            "type": "array",
+            "items": {}
+          },
+          "account_claims_initiated": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "exported_at",
+          "format_version",
+          "org",
+          "agents",
+          "calendars",
+          "events",
+          "availability_rules",
+          "ical_subscriptions",
+          "webhook_subscriptions",
+          "api_keys",
+          "scheduling_proposals",
+          "proposal_slots",
+          "proposal_responses",
+          "usage_records",
+          "quota_counters",
+          "tos_acceptances",
+          "account_claims_initiated"
+        ]
+      },
+      "ClaimInitiateRequest": {
+        "type": "object",
+        "properties": {
+          "agent_org_email": {
+            "type": "string",
+            "format": "email",
+            "example": "agent@example.com"
+          }
+        },
+        "required": [
+          "agent_org_email"
+        ]
+      },
+      "ClaimInitiateResponse": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_id",
+          "message"
+        ]
+      },
+      "ClaimVerifyRequest": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "otp": {
+            "type": "string",
+            "pattern": "^\\d{6}$",
+            "example": "123456"
+          }
+        },
+        "required": [
+          "claim_id",
+          "otp"
+        ]
+      },
+      "ClaimVerifyResponse": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "verified"
+            ]
+          },
+          "revocation_window_ends_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expected_completion_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "claim_id",
+          "status",
+          "revocation_window_ends_at",
+          "expected_completion_at"
+        ]
+      },
+      "ClaimRevokeRequest": {
+        "type": "object",
+        "properties": {
+          "revocation_token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "revocation_token"
+        ]
+      },
+      "ClaimRevokeResponse": {
+        "type": "object",
+        "properties": {
+          "revoked": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "required": [
+          "revoked"
+        ]
+      },
+      "Claim": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_org_email_masked": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "verified",
+              "completed",
+              "revoked",
+              "failed"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revocation_window_ends_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "expected_completion_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "failure_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "target_org_email_masked",
+          "status",
+          "created_at",
+          "verified_at",
+          "revocation_window_ends_at",
+          "expected_completion_at",
+          "completed_at",
+          "revoked_at",
+          "failure_reason"
+        ]
+      },
+      "ClaimsListResponse": {
+        "type": "object",
+        "properties": {
+          "claims": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Claim"
+            }
+          }
+        },
+        "required": [
+          "claims"
         ]
       },
       "WebhookCreated": {
@@ -2380,7 +2747,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "pre-launch"
+            "example": "2026-04-26"
           }
         },
         "required": [
@@ -2835,6 +3202,337 @@
           },
           "409": {
             "description": "ToS version stale — the submitted `tos_version` does not match `CURRENT_TERMS_VERSION`. Response body includes a `current_version` field on the `error` object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/export": {
+      "get": {
+        "summary": "Export all account data (GDPR Art. 15 + 20 portability)",
+        "description": "Returns a JSON dump of every row this org owns: agents, calendars, events (with decrypted titles + descriptions), iCal subscriptions (with decrypted URL), webhook subscriptions (with decrypted secret), availability rules, scheduling proposals + slots + responses, API key prefixes, ToS acceptance history, and usage/quota counters. Internal infrastructure data (incident_records, scheduling internals, password/OTP/key hashes, claim tokens) is excluded. JWT-authenticated (console session cookie or Bearer token). Rate-limited to 10 exports/hour/org. Response includes `Cache-Control: no-store` and `Content-Disposition: attachment` so the browser triggers a download.",
+        "tags": [
+          "Account"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full account data export",
+            "headers": {
+              "Content-Disposition": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "attachment; filename=\"chronary-export-YYYY-MM-DD.json\""
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "no-store"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataExport"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/claim/initiate": {
+      "post": {
+        "summary": "Start an account claim",
+        "description": "Initiates a claim of an agent-created Chronary account. Requires console JWT auth. Returns the same opaque shape regardless of whether the target email maps to a claimable account — by design, to prevent enumeration. Sends a 6-digit OTP to the target inbox; pair with `POST /v1/auth/claim/verify` within 10 minutes.",
+        "tags": [
+          "Account claim"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimInitiateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Opaque success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimInitiateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/claim/verify": {
+      "post": {
+        "summary": "Verify an account claim OTP",
+        "description": "Verifies the OTP for a pending claim. Requires console JWT auth with `iat` within the last 5 minutes — older sessions return 401 `reauth_required`. On success the claim enters a 24h revocation hold; the original account holder can revoke from the notification email during that window. After 24h a cron promotes the claim and transfers all org-scoped resources.",
+        "tags": [
+          "Account claim"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimVerifyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claim entered the 24h hold",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimVerifyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/claim/{id}/revoke": {
+      "post": {
+        "summary": "Revoke a verified claim during the hold window",
+        "description": "Public endpoint — authenticates by the `revocation_token` mailed to the agent-org email at verify time. Allowed only while the claim is in `verified` state and the 24h window is still open. Returns 410 once the window closes.",
+        "tags": [
+          "Account claim"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimRevokeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claim revoked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimRevokeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Revocation window has closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimRevokeResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/claims": {
+      "get": {
+        "summary": "List your account claims",
+        "description": "Returns the developer's pending and historical claims, most recent first. Sanitized — never includes OTP hashes, revocation tokens, or full target emails.",
+        "tags": [
+          "Account claim"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of claims",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimsListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -7829,7 +8527,7 @@
     "/v1/feedback": {
       "post": {
         "summary": "Submit agent feedback",
-        "description": "Structured feedback for bugs, features, or friction. Logged to Chronary for triage — no DB record is created. Rate limited to **5 per day per organization** (UTC day). Available on all plans, including free.",
+        "description": "Structured feedback for bugs, features, or friction. Logged to Chronary for triage — no DB record is created. Rate limited to **25 per day per organization** (UTC day) for live-mode keys. **Test-mode keys (`chr_sk_test_*`) bypass the cap entirely** so synthetic test traffic doesn't consume real users' feedback budget. Available on all plans, including free.",
         "tags": [
           "Feedback"
         ],
