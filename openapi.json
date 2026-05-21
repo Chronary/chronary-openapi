@@ -291,7 +291,7 @@
               "null"
             ],
             "format": "date-time",
-            "description": "When set, the event is a tentative hold that auto-expires at this timestamp.",
+            "description": "When set, the event is a tentative hold that auto-expires at this timestamp. Must be 30 seconds to 15 minutes in the future when creating a hold; the cap exists to keep held slots short enough that they do not block real scheduling for long.",
             "example": null
           },
           "hold_priority": {
@@ -5612,6 +5612,7 @@
       },
       "post": {
         "summary": "Create an event in a calendar",
+        "description": "Create a confirmed event, a tentative event, or a temporal hold. When creating a hold (`status: \"hold\"`), `hold_expires_at` is required and must be between 30 seconds and 15 minutes in the future. Holds auto-release at `hold_expires_at`; promote a hold to a confirmed event with `PUT /v1/events/{id}/confirm` before expiry.",
         "tags": [
           "Events"
         ],
@@ -8827,7 +8828,7 @@
     "/v1/agent/sign-up": {
       "post": {
         "summary": "Agent self-signup",
-        "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nThe returned key is *restricted*: it can issue GET requests and `POST /v1/agent/verify`, but all other writes return 403 until the OTP is verified.\n\nRate limit: 5 requests per 60 seconds per client IP.",
+        "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nThe returned key is bound to an *unverified* org. It is fully usable for reads and writes within the standard per-resource quotas, but the org cannot graduate from the introductory `free-agent-unverified` plan tier until you call `POST /v1/agent/verify` with the emailed OTP. Verification rotates the org to its normal plan (e.g. `free-agent` or — during the soft-launch window — `pro` via the auto-grant capacity gate).\n\nRate limit: 5 requests per 60 seconds per client IP.",
         "tags": [
           "Agent Auth"
         ],
