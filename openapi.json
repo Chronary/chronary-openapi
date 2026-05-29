@@ -3,7 +3,7 @@
   "info": {
     "title": "Chronary API",
     "version": "1.0.0",
-    "description": "Calendar-as-a-service API for AI agents.\n\nManage calendars, events, and availability for AI and human agents.\nAll endpoints require an API key passed as a Bearer token.\n\n**Authentication:** `Authorization: Bearer chr_sk_...` or `Authorization: Bearer chr_ak_...`\n\n**Rate limit:** 10 requests/second per API key. Exceeds return HTTP 429.\n\n**Quotas:** Monthly operation limits by plan — see [Quotas](https://docs.chronary.ai/reference/quotas).",
+    "description": "Calendar-as-a-service API for AI agents.\n\nManage calendars, events, and availability for AI and human agents.\nAll endpoints require an API key passed as a Bearer token.\n\n**Authentication:** `Authorization: Bearer chr_sk_...` or `Authorization: Bearer chr_ak_...`\n\n**Rate limit:** 10 requests/second per API key. Exceeds return HTTP 429.\n\n**Quotas:** Monthly operation limits by plan — see [Quotas](https://docs.chronary.ai/reference/quotas).\n\n**Agent bootstrap:** Custom extensions prefixed `x-agent-*` describe the self-signup flow for AI agents. These are not part of any registered OpenAPI extension — they are a Chronary convention.",
     "contact": {
       "name": "Chronary Support",
       "email": "support@chronary.ai",
@@ -291,16 +291,16 @@
               "null"
             ],
             "format": "date-time",
-            "description": "When set, the event is a tentative hold that auto-expires at this timestamp. Must be 30 seconds to 15 minutes in the future when creating a hold; the cap exists to keep held slots short enough that they do not block real scheduling for long.",
-            "example": null
+            "example": null,
+            "description": "When set, the event is a tentative hold that auto-expires at this timestamp. Must be 30 seconds to 15 minutes in the future when creating a hold; the cap exists to keep held slots short enough that they do not block real scheduling for long."
           },
           "hold_priority": {
             "type": [
               "integer",
               "null"
             ],
-            "description": "Priority for conflict resolution. Higher values pre-empt lower-priority overlapping holds.",
-            "example": 0
+            "example": 0,
+            "description": "Priority for conflict resolution. Higher values pre-empt lower-priority overlapping holds."
           },
           "created_at": {
             "type": "string",
@@ -797,8 +797,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -818,8 +818,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -839,8 +839,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -860,8 +860,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -881,8 +881,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -902,8 +902,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -923,8 +923,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -944,8 +944,8 @@
                   "integer",
                   "null"
                 ],
-                "description": "`null` means unlimited.",
-                "example": 2500
+                "example": 2500,
+                "description": "`null` means unlimited."
               }
             },
             "required": [
@@ -2054,8 +2054,8 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "description": "Must equal `CURRENT_TERMS_VERSION`.",
-            "example": "2026-05-11"
+            "example": "2026-05-11",
+            "description": "Must equal `CURRENT_TERMS_VERSION`."
           }
         },
         "required": [
@@ -2475,8 +2475,8 @@
             "properties": {
               "secret": {
                 "type": "string",
-                "description": "HMAC-SHA256 signing secret — returned once at creation time only. Store it securely.",
-                "example": "whsec_abc123..."
+                "example": "whsec_abc123...",
+                "description": "HMAC-SHA256 signing secret — returned once at creation time only. Store it securely."
               }
             },
             "required": [
@@ -3004,8 +3004,8 @@
           "intent": {
             "type": "string",
             "maxLength": 200,
-            "description": "\"What are you building?\" — free-text, capped at 200 chars.",
-            "example": "Building an AI scheduling agent for sales teams."
+            "example": "Building an AI scheduling agent for sales teams.",
+            "description": "\"What are you building?\" — free-text, capped at 200 chars."
           }
         },
         "required": [
@@ -3071,8 +3071,8 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 100,
-            "description": "Percent of soft-launch slots currently occupied. 0–100.",
-            "example": 42
+            "example": 42,
+            "description": "Percent of soft-launch slots currently occupied. 0–100."
           },
           "status": {
             "type": "string",
@@ -3080,8 +3080,8 @@
               "open",
               "full"
             ],
-            "description": "`open` when new auto-approvals are accepted; `full` when at capacity.",
-            "example": "open"
+            "example": "open",
+            "description": "`open` when new auto-approvals are accepted; `full` when at capacity."
           }
         },
         "required": [
@@ -3207,73 +3207,6 @@
           "status"
         ]
       },
-      "PlanLimits": {
-        "type": [
-          "object",
-          "null"
-        ],
-        "properties": {
-          "agents": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "calendars": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "events": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "api_calls": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "webhook_deliveries": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "availability_queries": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "ical_subscriptions": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "proposals": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          }
-        },
-        "required": [
-          "agents",
-          "calendars",
-          "events",
-          "api_calls",
-          "webhook_deliveries",
-          "availability_queries",
-          "ical_subscriptions",
-          "proposals"
-        ],
-        "description": "Enforced caps. `null` for the custom-priced tier (negotiated separately)."
-      },
       "Plan": {
         "type": "object",
         "properties": {
@@ -3342,6 +3275,73 @@
           "display_features",
           "recommended"
         ]
+      },
+      "PlanLimits": {
+        "type": [
+          "object",
+          "null"
+        ],
+        "properties": {
+          "agents": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "calendars": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "events": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "api_calls": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "webhook_deliveries": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "availability_queries": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "ical_subscriptions": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "proposals": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "agents",
+          "calendars",
+          "events",
+          "api_calls",
+          "webhook_deliveries",
+          "availability_queries",
+          "ical_subscriptions",
+          "proposals"
+        ],
+        "description": "Enforced caps. `null` for the custom-priced tier (negotiated separately)."
       },
       "ICalSyncQueued": {
         "type": "object",
@@ -3882,6 +3882,7 @@
               "description": "iCal feed token from the calendar `ical_token` field"
             },
             "required": true,
+            "description": "iCal feed token from the calendar `ical_token` field",
             "name": "ical_token",
             "in": "path"
           }
@@ -4101,10 +4102,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "id",
             "in": "path"
           }
@@ -4171,10 +4173,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "id",
             "in": "path"
           }
@@ -4262,10 +4265,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "id",
             "in": "path"
           }
@@ -4327,10 +4331,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "agent_id",
             "in": "path"
           },
@@ -4432,10 +4437,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "agent_id",
             "in": "path"
           }
@@ -4535,10 +4541,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "agent_id",
             "in": "path"
           },
@@ -4676,10 +4683,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "id",
             "in": "path"
           },
@@ -4805,10 +4813,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "agent_id",
             "in": "path"
           },
@@ -4913,10 +4922,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Agent ID",
-              "example": "agt_01H9X4M2P5R8T6V0"
+              "example": "agt_01H9X4M2P5R8T6V0",
+              "description": "Agent ID"
             },
             "required": true,
+            "description": "Agent ID",
             "name": "agent_id",
             "in": "path"
           }
@@ -5182,10 +5192,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -5252,10 +5263,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -5343,10 +5355,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -5409,10 +5422,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -5481,10 +5495,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "cal_id",
             "in": "path"
           },
@@ -5620,10 +5635,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "cal_id",
             "in": "path"
           }
@@ -5722,20 +5738,22 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "cal_id",
             "in": "path"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Event ID",
-              "example": "evt_01H9X4M2P5R8T6V0"
+              "example": "evt_01H9X4M2P5R8T6V0",
+              "description": "Event ID"
             },
             "required": true,
+            "description": "Event ID",
             "name": "id",
             "in": "path"
           }
@@ -5802,20 +5820,22 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "cal_id",
             "in": "path"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Event ID",
-              "example": "evt_01H9X4M2P5R8T6V0"
+              "example": "evt_01H9X4M2P5R8T6V0",
+              "description": "Event ID"
             },
             "required": true,
+            "description": "Event ID",
             "name": "id",
             "in": "path"
           }
@@ -5902,20 +5922,22 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "cal_id",
             "in": "path"
           },
           {
             "schema": {
               "type": "string",
-              "description": "Event ID",
-              "example": "evt_01H9X4M2P5R8T6V0"
+              "example": "evt_01H9X4M2P5R8T6V0",
+              "description": "Event ID"
             },
             "required": true,
+            "description": "Event ID",
             "name": "id",
             "in": "path"
           }
@@ -5978,10 +6000,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           },
@@ -6108,10 +6131,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -6199,10 +6223,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -6270,10 +6295,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Calendar ID",
-              "example": "cal_01H9X4M2P5R8T6V0"
+              "example": "cal_01H9X4M2P5R8T6V0",
+              "description": "Calendar ID"
             },
             "required": true,
+            "description": "Calendar ID",
             "name": "id",
             "in": "path"
           }
@@ -6336,10 +6362,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Event ID",
-              "example": "evt_01H9X4M2P5R8T6V0"
+              "example": "evt_01H9X4M2P5R8T6V0",
+              "description": "Event ID"
             },
             "required": true,
+            "description": "Event ID",
             "name": "id",
             "in": "path"
           }
@@ -6455,10 +6482,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Event ID",
-              "example": "evt_01H9X4M2P5R8T6V0"
+              "example": "evt_01H9X4M2P5R8T6V0",
+              "description": "Event ID"
             },
             "required": true,
+            "description": "Event ID",
             "name": "id",
             "in": "path"
           }
@@ -6891,10 +6919,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Webhook ID",
-              "example": "whk_01H9X4M2P5R8T6V0"
+              "example": "whk_01H9X4M2P5R8T6V0",
+              "description": "Webhook ID"
             },
             "required": true,
+            "description": "Webhook ID",
             "name": "id",
             "in": "path"
           }
@@ -6961,10 +6990,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Webhook ID",
-              "example": "whk_01H9X4M2P5R8T6V0"
+              "example": "whk_01H9X4M2P5R8T6V0",
+              "description": "Webhook ID"
             },
             "required": true,
+            "description": "Webhook ID",
             "name": "id",
             "in": "path"
           }
@@ -7051,10 +7081,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Webhook ID",
-              "example": "whk_01H9X4M2P5R8T6V0"
+              "example": "whk_01H9X4M2P5R8T6V0",
+              "description": "Webhook ID"
             },
             "required": true,
+            "description": "Webhook ID",
             "name": "id",
             "in": "path"
           }
@@ -7117,10 +7148,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "Webhook ID",
-              "example": "whk_01H9X4M2P5R8T6V0"
+              "example": "whk_01H9X4M2P5R8T6V0",
+              "description": "Webhook ID"
             },
             "required": true,
+            "description": "Webhook ID",
             "name": "id",
             "in": "path"
           },
@@ -7258,10 +7290,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "iCal subscription ID",
-              "example": "ics_01H9X4M2P5R8T6V0"
+              "example": "ics_01H9X4M2P5R8T6V0",
+              "description": "iCal subscription ID"
             },
             "required": true,
+            "description": "iCal subscription ID",
             "name": "id",
             "in": "path"
           }
@@ -7328,10 +7361,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "iCal subscription ID",
-              "example": "ics_01H9X4M2P5R8T6V0"
+              "example": "ics_01H9X4M2P5R8T6V0",
+              "description": "iCal subscription ID"
             },
             "required": true,
+            "description": "iCal subscription ID",
             "name": "id",
             "in": "path"
           }
@@ -7418,10 +7452,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "iCal subscription ID",
-              "example": "ics_01H9X4M2P5R8T6V0"
+              "example": "ics_01H9X4M2P5R8T6V0",
+              "description": "iCal subscription ID"
             },
             "required": true,
+            "description": "iCal subscription ID",
             "name": "id",
             "in": "path"
           }
@@ -7484,10 +7519,11 @@
           {
             "schema": {
               "type": "string",
-              "description": "iCal subscription ID",
-              "example": "ics_01H9X4M2P5R8T6V0"
+              "example": "ics_01H9X4M2P5R8T6V0",
+              "description": "iCal subscription ID"
             },
             "required": true,
+            "description": "iCal subscription ID",
             "name": "id",
             "in": "path"
           }
@@ -7613,6 +7649,7 @@
               "example": "2026-05-01T00:00:00.000Z"
             },
             "required": false,
+            "description": "Lower bound (inclusive). Clamped to retention window if older.",
             "name": "from",
             "in": "query"
           },
@@ -7624,6 +7661,7 @@
               "example": "2026-05-11T00:00:00.000Z"
             },
             "required": false,
+            "description": "Upper bound (inclusive). Defaults to now.",
             "name": "to",
             "in": "query"
           },
@@ -7636,6 +7674,7 @@
               "example": "agent.create"
             },
             "required": false,
+            "description": "Filter by exact action name, e.g. `agent.create`.",
             "name": "action",
             "in": "query"
           },
@@ -7648,6 +7687,7 @@
               "example": "chr_sk_abcdef12345"
             },
             "required": false,
+            "description": "Filter by the first 20 chars of the actor API key.",
             "name": "actor_key_prefix",
             "in": "query"
           },
@@ -7657,6 +7697,7 @@
               "description": "Opaque pagination cursor from a previous response."
             },
             "required": false,
+            "description": "Opaque pagination cursor from a previous response.",
             "name": "cursor",
             "in": "query"
           },
@@ -7669,6 +7710,7 @@
               "example": 50
             },
             "required": false,
+            "description": "Page size (1–200). Defaults to 50.",
             "name": "limit",
             "in": "query"
           }
@@ -8833,6 +8875,8 @@
           "Agent Auth"
         ],
         "security": [],
+        "x-agent-bootstrap": true,
+        "x-agent-hint": "Call this first. Returns a restricted API key that works immediately for reads + writes. Follow up with POST /v1/agent/verify once the human reads the OTP.",
         "requestBody": {
           "required": true,
           "content": {
@@ -9201,6 +9245,8 @@
         "tags": [
           "Agent Auth"
         ],
+        "x-agent-bootstrap": true,
+        "x-agent-hint": "Submit the 6-digit OTP the human received via email. Upgrades the restricted key to the full plan tier. Returns generic 400 on any failure to prevent enumeration.",
         "requestBody": {
           "required": true,
           "content": {
@@ -9375,5 +9421,21 @@
       }
     }
   },
-  "webhooks": {}
+  "webhooks": {},
+  "x-agent-self-signup": {
+    "url": "https://api.chronary.ai/v1/agent/sign-up",
+    "verify_url": "https://api.chronary.ai/v1/agent/verify",
+    "restricted_key_returned": true,
+    "human_in_the_loop": "otp_email",
+    "rate_limit": "5 requests per 60s per client IP"
+  },
+  "x-agent-bootstrap-script": {
+    "npx": "npx @chronary/agent-init@latest",
+    "shell": "https://chronary.ai/agent-init.sh",
+    "description": "One-liner that performs sign-up, prompts for OTP, verifies, and creates a smoke calendar. Accepts CHRONARY_EMAIL and CHRONARY_OTP env vars for non-interactive flows."
+  },
+  "x-llms-txt": "https://docs.chronary.ai/llms.txt",
+  "x-llms-full-txt": "https://docs.chronary.ai/llms-full.txt",
+  "x-mcp-server-card": "https://chronary.ai/.well-known/mcp/server-card.json",
+  "x-api-catalog": "https://chronary.ai/.well-known/api-catalog"
 }
