@@ -179,6 +179,19 @@
             "format": "uri",
             "example": "https://api.chronary.ai/ical/abc123def456ghi789.ics"
           },
+          "default_reminders": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              10
+            ],
+            "description": "Default reminder offsets (minutes before start) inherited by events that don't set their own. null = use the system default (10 min); [] = no reminders."
+          },
           "metadata": {
             "type": "object",
             "additionalProperties": {},
@@ -202,6 +215,7 @@
           "timezone",
           "agent_status",
           "ical_url",
+          "default_reminders",
           "metadata",
           "created_at",
           "updated_at"
@@ -285,6 +299,19 @@
             "additionalProperties": {},
             "example": {}
           },
+          "reminders": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer"
+            },
+            "example": [
+              10
+            ],
+            "description": "Reminder offsets (minutes before start). Each fires an event.reminder webhook and emits a VALARM in the iCal feed. null = inherit the calendar default (then the system default of 10 min); [] = no reminders."
+          },
           "hold_expires_at": {
             "type": [
               "string",
@@ -324,6 +351,7 @@
           "status",
           "source",
           "metadata",
+          "reminders",
           "created_at",
           "updated_at"
         ]
@@ -484,6 +512,7 @@
                 "event.deleted",
                 "event.started",
                 "event.ended",
+                "event.reminder",
                 "event.hold_created",
                 "event.hold_expired",
                 "event.hold_released",
@@ -559,6 +588,7 @@
               "event.deleted",
               "event.started",
               "event.ended",
+              "event.reminder",
               "event.hold_created",
               "event.hold_expired",
               "event.hold_released",
@@ -1331,6 +1361,18 @@
               "error"
             ]
           },
+          "default_reminders": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 40320
+            },
+            "maxItems": 5
+          },
           "metadata": {
             "type": "object",
             "additionalProperties": {}
@@ -1361,6 +1403,18 @@
               "waiting",
               "error"
             ]
+          },
+          "default_reminders": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 40320
+            },
+            "maxItems": 5
           },
           "metadata": {
             "type": "object",
@@ -1430,6 +1484,18 @@
             "type": "object",
             "additionalProperties": {}
           },
+          "reminders": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 40320
+            },
+            "maxItems": 5
+          },
           "hold_expires_at": {
             "type": "string",
             "format": "date-time"
@@ -1482,6 +1548,18 @@
           "metadata": {
             "type": "object",
             "additionalProperties": {}
+          },
+          "reminders": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 40320
+            },
+            "maxItems": 5
           }
         }
       },
@@ -1830,6 +1908,7 @@
                 "event.deleted",
                 "event.started",
                 "event.ended",
+                "event.reminder",
                 "event.hold_created",
                 "event.hold_expired",
                 "event.hold_released",
@@ -1869,6 +1948,7 @@
                 "event.deleted",
                 "event.started",
                 "event.ended",
+                "event.reminder",
                 "event.hold_created",
                 "event.hold_expired",
                 "event.hold_released",
@@ -4914,7 +4994,7 @@
       },
       "post": {
         "summary": "Create an iCal subscription for an agent",
-        "description": "Subscribes an agent's calendar to an external iCal feed. The feed is polled every 30 minutes and events are synced into the target calendar.",
+        "description": "Subscribes an agent's calendar to an external iCal feed. The feed is polled approximately every 5 minutes and events are synced into the target calendar.",
         "tags": [
           "iCal Subscriptions"
         ],
