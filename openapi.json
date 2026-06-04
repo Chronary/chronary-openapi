@@ -4994,7 +4994,7 @@
       },
       "post": {
         "summary": "Create an iCal subscription for an agent",
-        "description": "Subscribes an agent's calendar to an external iCal feed. The feed is polled approximately every 5 minutes and events are synced into the target calendar.",
+        "description": "Subscribes an agent's calendar to an external iCal feed. The feed is polled approximately every 15 minutes and events are synced into the target calendar.",
         "tags": [
           "iCal Subscriptions"
         ],
