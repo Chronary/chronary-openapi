@@ -1,9 +1,9 @@
 {
   "artifact": "openapi",
-  "version": "2026.06.03+5b08103",
-  "public_tag": "2026.06.03+5b08103",
-  "private_source_sha": "5b081033dc1dcac3f6d970fb2107e4cfab48179e",
-  "private_release_tag": "public-release/20260603.1-5b08103",
+  "version": "2026.06.04+d5b53a3",
+  "public_tag": "2026.06.04+d5b53a3",
+  "private_source_sha": "d5b53a3fe5ef102877541e5929407bb65e5d4e7e",
+  "private_release_tag": "public-release/20260604.3-d5b53a3",
   "publish_registry": false,
-  "generated_at": "2026-06-03T17:46:25.861Z"
+  "generated_at": "2026-06-04T18:41:01.682Z"
 }
