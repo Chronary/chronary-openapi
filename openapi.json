@@ -2168,6 +2168,24 @@
           "data"
         ]
       },
+      "TermsAcceptResponse": {
+        "type": "object",
+        "properties": {
+          "accepted_terms_version": {
+            "type": "string",
+            "example": "2026-05-11"
+          },
+          "accepted_terms_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-05-11T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "accepted_terms_version",
+          "accepted_terms_at"
+        ]
+      },
       "DataExport": {
         "type": "object",
         "properties": {
@@ -3595,6 +3613,82 @@
           },
           "401": {
             "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ToS version stale — the submitted `tos_version` does not match `CURRENT_TERMS_VERSION`. Response body includes a `current_version` field on the `error` object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/terms/accept": {
+      "post": {
+        "summary": "Accept the current Terms of Service (API key)",
+        "description": "Bearer-API-key equivalent of `PATCH /v1/auth/terms`, for SDK / MCP clients that have no console session. Use it to clear a material ToS bump signalled by the `Chronary-Terms-Upgrade-Required` response header. Reaches the same re-acceptance path (appends an immutable `tos_acceptances` row and updates the org). Requires an org-level API key (`chr_sk_*`) — agent-scoped keys are rejected with 403.",
+        "tags": [
+          "Terms"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReacceptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Re-acceptance recorded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TermsAcceptResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — quota exceeded or operation not permitted",
             "content": {
               "application/json": {
                 "schema": {
