@@ -184,6 +184,22 @@
             "additionalProperties": {},
             "example": {}
           },
+          "externalId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": null,
+            "description": "Provider calendar ID when bridged to an external provider (Phase 3); null otherwise."
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": null,
+            "description": "External provider this calendar is bridged to (google | microsoft | apple); null otherwise."
+          },
           "deletedAt": {
             "type": [
               "string",
@@ -238,6 +254,8 @@
           "name",
           "timezone",
           "metadata",
+          "externalId",
+          "provider",
           "deletedAt",
           "createdAt",
           "updatedAt",
@@ -579,6 +597,20 @@
             "type": "boolean",
             "example": true
           },
+          "consecutiveFailures": {
+            "type": "integer",
+            "example": 0,
+            "description": "Circuit-breaker counter: consecutive terminal delivery failures. Reset to 0 on any successful delivery; the endpoint is auto-deactivated at 20 or after 24h of continuous failure."
+          },
+          "firstFailureAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "example": null,
+            "description": "Timestamp of the first failure in the current failure streak; null when there is no active streak."
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -591,6 +623,8 @@
           "url",
           "events",
           "active",
+          "consecutiveFailures",
+          "firstFailureAt",
           "createdAt"
         ]
       },
