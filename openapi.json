@@ -3507,6 +3507,20 @@
               "integer",
               "null"
             ]
+          },
+          "webhook_endpoints": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Max active webhook subscription endpoints per org."
+          },
+          "scoped_keys": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Max live agent-scoped API keys (`chr_ak_*`) per org."
           }
         },
         "required": [
@@ -3517,7 +3531,9 @@
           "webhook_deliveries",
           "availability_queries",
           "ical_subscriptions",
-          "proposals"
+          "proposals",
+          "webhook_endpoints",
+          "scoped_keys"
         ],
         "description": "Enforced caps. `null` for the custom-priced tier (negotiated separately)."
       },
