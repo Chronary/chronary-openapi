@@ -3758,6 +3758,7 @@
   "paths": {
     "/health": {
       "get": {
+        "operationId": "healthCheck",
         "summary": "Health check",
         "description": "Returns the current server status. Does not require authentication.",
         "tags": [
@@ -3798,6 +3799,7 @@
     },
     "/v1/plans": {
       "get": {
+        "operationId": "listPlans",
         "summary": "List plans",
         "description": "Returns the catalog of publicly-available plans with pricing, limits, and display metadata. No authentication required; IP-rate-limited. Responses are cacheable (`Cache-Control: public, max-age=300, s-maxage=3600, stale-while-revalidate=86400`) with an `ETag` for 304 conditional requests.",
         "tags": [
@@ -3834,6 +3836,7 @@
     },
     "/v1/auth/terms/current": {
       "get": {
+        "operationId": "getCurrentTerms",
         "summary": "Get current Terms of Service version",
         "description": "Returns the latest ToS manifest entry. No authentication required — intended for CLIs, SDKs, and agent-signup flows that need to read the current version at runtime rather than rely on a build-time constant.",
         "tags": [
@@ -3866,6 +3869,7 @@
     },
     "/v1/auth/terms": {
       "patch": {
+        "operationId": "acceptTerms",
         "summary": "Accept the current Terms of Service",
         "description": "Appends an immutable row to `tos_acceptances` (source=`reaccept`) capturing the accepting org, client IP, user-agent, and the ToS document SHA-256, then updates the denormalized `accepted_terms_version` / `accepted_terms_at` columns on the organization. Authenticated via JWT (console session cookie or Bearer token), not an API key.",
         "tags": [
@@ -3932,6 +3936,7 @@
     },
     "/v1/terms/accept": {
       "post": {
+        "operationId": "acceptTermsWithApiKey",
         "summary": "Accept the current Terms of Service (API key)",
         "description": "Bearer-API-key equivalent of `PATCH /v1/auth/terms`, for SDK / MCP clients that have no console session. Use it to clear a material ToS bump signalled by the `Chronary-Terms-Upgrade-Required` response header. Reaches the same re-acceptance path (appends an immutable `tos_acceptances` row and updates the org). Requires an org-level API key (`chr_sk_*`) — agent-scoped keys are rejected with 403.",
         "tags": [
@@ -4008,6 +4013,7 @@
     },
     "/v1/auth/export": {
       "get": {
+        "operationId": "exportAccountData",
         "summary": "Export all account data (GDPR Art. 15 + 20 portability)",
         "description": "Returns a JSON dump of every row this org owns: agents, calendars, events (with decrypted titles + descriptions), iCal subscriptions (with decrypted URL), webhook subscriptions (with decrypted secret), availability rules, scheduling proposals + slots + responses, API key prefixes, ToS acceptance history, and usage/quota counters. Internal infrastructure data (incident_records, scheduling internals, password/OTP/key hashes, claim tokens) is excluded. JWT-authenticated (console session cookie or Bearer token). Rate-limited to 10 exports/hour/org. Response includes `Cache-Control: no-store` and `Content-Disposition: attachment` so the browser triggers a download.",
         "tags": [
@@ -4068,6 +4074,7 @@
     },
     "/v1/auth/claim/initiate": {
       "post": {
+        "operationId": "initiateAccountClaim",
         "summary": "Start an account claim",
         "description": "Initiates a claim of an agent-created Chronary account. Requires console JWT auth. Returns the same opaque shape regardless of whether the target email maps to a claimable account — by design, to prevent enumeration. Sends a 6-digit OTP to the target inbox; pair with `POST /v1/auth/claim/verify` within 10 minutes.",
         "tags": [
@@ -4144,6 +4151,7 @@
     },
     "/v1/auth/claim/verify": {
       "post": {
+        "operationId": "verifyAccountClaim",
         "summary": "Verify an account claim OTP",
         "description": "Verifies the OTP for a pending claim. Requires console JWT auth with `iat` within the last 5 minutes — older sessions return 401 `reauth_required`. On success the claim enters a 24h revocation hold; the original account holder can revoke from the notification email during that window. After 24h a cron promotes the claim and transfers all org-scoped resources.",
         "tags": [
@@ -4210,6 +4218,7 @@
     },
     "/v1/auth/claim/{id}/revoke": {
       "post": {
+        "operationId": "revokeAccountClaim",
         "summary": "Revoke a verified claim during the hold window",
         "description": "Public endpoint — authenticates by the `revocation_token` mailed to the agent-org email at verify time. Allowed only while the claim is in `verified` state and the 24h window is still open. Returns 410 once the window closes.",
         "tags": [
@@ -4293,6 +4302,7 @@
     },
     "/v1/auth/claims": {
       "get": {
+        "operationId": "listAccountClaims",
         "summary": "List your account claims",
         "description": "Returns the developer's pending and historical claims, most recent first. Sanitized — never includes OTP hashes, revocation tokens, or full target emails.",
         "tags": [
@@ -4339,6 +4349,7 @@
     },
     "/ical/{ical_token}": {
       "get": {
+        "operationId": "getIcalFeed",
         "summary": "Get iCal feed",
         "description": "Returns a calendar's events in iCalendar (RFC 5545) format. No authentication required — the token in the URL acts as a capability. Responses are cached for 5 minutes and include an ETag for conditional requests.",
         "tags": [
@@ -4383,6 +4394,7 @@
     },
     "/v1/agents": {
       "get": {
+        "operationId": "listAgents",
         "summary": "List agents",
         "tags": [
           "Agents"
@@ -4483,6 +4495,7 @@
         }
       },
       "post": {
+        "operationId": "createAgent",
         "summary": "Register an agent",
         "description": "Registers your AI agent with Chronary, creating a Chronary identity it can use to own calendars, events, and webhooks. The agent itself already exists in your system — this gives it a Chronary record.",
         "tags": [
@@ -4564,6 +4577,7 @@
     },
     "/v1/agents/{id}": {
       "get": {
+        "operationId": "getAgent",
         "summary": "Get an agent",
         "tags": [
           "Agents"
@@ -4635,6 +4649,7 @@
         }
       },
       "patch": {
+        "operationId": "updateAgent",
         "summary": "Update an agent",
         "tags": [
           "Agents"
@@ -4726,6 +4741,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteAgent",
         "summary": "Delete an agent",
         "description": "Decommissions the agent and all associated calendars and events.",
         "tags": [
@@ -4793,6 +4809,7 @@
     },
     "/v1/agents/{agent_id}/calendars": {
       "get": {
+        "operationId": "listAgentCalendars",
         "summary": "List calendars for an agent",
         "tags": [
           "Calendars"
@@ -4899,6 +4916,7 @@
         }
       },
       "post": {
+        "operationId": "createAgentCalendar",
         "summary": "Create a calendar for an agent",
         "tags": [
           "Calendars"
@@ -5002,6 +5020,7 @@
     },
     "/v1/agents/{agent_id}/events": {
       "get": {
+        "operationId": "listAgentEvents",
         "summary": "List events for an agent",
         "description": "Returns events across all calendars owned by the agent.",
         "tags": [
@@ -5144,6 +5163,7 @@
     },
     "/v1/agents/{id}/availability": {
       "get": {
+        "operationId": "getAgentAvailability",
         "summary": "Get agent availability",
         "description": "Returns free/busy slots for all calendars owned by the agent.",
         "tags": [
@@ -5289,6 +5309,7 @@
     },
     "/v1/agents/{agent_id}/ical-subscriptions": {
       "get": {
+        "operationId": "listAgentIcalSubscriptions",
         "summary": "List iCal subscriptions for an agent",
         "tags": [
           "iCal Subscriptions"
@@ -5397,6 +5418,7 @@
         }
       },
       "post": {
+        "operationId": "createAgentIcalSubscription",
         "summary": "Create an iCal subscription for an agent",
         "description": "Subscribes an agent's calendar to an external iCal feed. The feed is polled approximately every 15 minutes and events are synced into the target calendar.",
         "tags": [
@@ -5501,6 +5523,7 @@
     },
     "/v1/calendars": {
       "get": {
+        "operationId": "listCalendars",
         "summary": "List calendars",
         "description": "By default, returns only agent-owned calendars. Pass `include=all` to include shared org-level calendars.",
         "tags": [
@@ -5587,6 +5610,7 @@
         }
       },
       "post": {
+        "operationId": "createCalendar",
         "summary": "Create a calendar",
         "description": "Creates a shared (org-level) calendar not associated with any specific agent.",
         "tags": [
@@ -5668,6 +5692,7 @@
     },
     "/v1/calendars/{id}": {
       "get": {
+        "operationId": "getCalendar",
         "summary": "Get a calendar",
         "tags": [
           "Calendars"
@@ -5739,6 +5764,7 @@
         }
       },
       "patch": {
+        "operationId": "updateCalendar",
         "summary": "Update a calendar",
         "tags": [
           "Calendars"
@@ -5830,6 +5856,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteCalendar",
         "summary": "Delete a calendar",
         "description": "Deletes a calendar and all its events.",
         "tags": [
@@ -5897,6 +5924,7 @@
     },
     "/v1/calendars/{id}/context": {
       "get": {
+        "operationId": "getCalendarContext",
         "summary": "Get calendar temporal context",
         "description": "Returns a snapshot of the calendar's temporal state: current event, next event, recent events, and upcoming events within 24 hours. Designed for agents that need situational awareness of a calendar.",
         "tags": [
@@ -5971,6 +5999,7 @@
     },
     "/v1/calendars/{cal_id}/events": {
       "get": {
+        "operationId": "listCalendarEvents",
         "summary": "List events in a calendar",
         "tags": [
           "Events"
@@ -6110,6 +6139,7 @@
         }
       },
       "post": {
+        "operationId": "createCalendarEvent",
         "summary": "Create an event in a calendar",
         "description": "Create a confirmed event, a tentative event, or a temporal hold. When creating a hold (`status: \"hold\"`), `hold_expires_at` is required and must be between 30 seconds and 15 minutes in the future. Holds auto-release at `hold_expires_at`; promote a hold to a confirmed event with `PUT /v1/events/{id}/confirm` before expiry.",
         "tags": [
@@ -6214,6 +6244,7 @@
     },
     "/v1/calendars/{cal_id}/events/{id}": {
       "get": {
+        "operationId": "getCalendarEvent",
         "summary": "Get a cal-scoped event",
         "tags": [
           "Events"
@@ -6296,6 +6327,7 @@
         }
       },
       "patch": {
+        "operationId": "updateCalendarEvent",
         "summary": "Update a cal-scoped event",
         "tags": [
           "Events"
@@ -6398,6 +6430,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteCalendarEvent",
         "summary": "Delete a cal-scoped event",
         "tags": [
           "Events"
@@ -6475,6 +6508,7 @@
     },
     "/v1/calendars/{id}/availability": {
       "get": {
+        "operationId": "getCalendarAvailability",
         "summary": "Get calendar availability",
         "description": "Returns free/busy slots for a single calendar.",
         "tags": [
@@ -6620,6 +6654,7 @@
     },
     "/v1/calendars/{id}/availability-rules": {
       "put": {
+        "operationId": "setAvailabilityRules",
         "summary": "Set availability rules",
         "description": "Upsert buffer times and working hours for a calendar.",
         "tags": [
@@ -6712,6 +6747,7 @@
         }
       },
       "get": {
+        "operationId": "getAvailabilityRules",
         "summary": "Get availability rules",
         "description": "Returns the buffer and working hours rules for a calendar.",
         "tags": [
@@ -6784,6 +6820,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteAvailabilityRules",
         "summary": "Delete availability rules",
         "description": "Removes buffer times and working hours for a calendar.",
         "tags": [
@@ -6851,6 +6888,7 @@
     },
     "/v1/events/{id}": {
       "get": {
+        "operationId": "getEvent",
         "summary": "Get an event",
         "description": "Fetch an event by ID. The calendar is resolved internally from the event.",
         "tags": [
@@ -6938,6 +6976,7 @@
         }
       },
       "patch": {
+        "operationId": "updateEvent",
         "summary": "Update an event",
         "description": "Update an event by ID. The calendar is resolved internally from the event.",
         "tags": [
@@ -7045,6 +7084,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteEvent",
         "summary": "Delete an event",
         "description": "Delete an event by ID. The calendar is resolved internally from the event.",
         "tags": [
@@ -7127,6 +7167,7 @@
     },
     "/v1/events/{id}/confirm": {
       "put": {
+        "operationId": "confirmEvent",
         "summary": "Confirm a held event",
         "description": "Promotes an event from `status=\"hold\"` to `status=\"confirmed\"`. The hold must still be active (not past `hold_expires_at`). After confirmation, `event.started` and `event.ended` lifecycle webhooks fire at the scheduled times, and the `event.hold_confirmed` webhook fires immediately.",
         "tags": [
@@ -7247,6 +7288,7 @@
     },
     "/v1/events/{id}/release": {
       "put": {
+        "operationId": "releaseEvent",
         "summary": "Release a held event",
         "description": "Manually releases an event with `status=\"hold\"` before its `hold_expires_at`. Frees the slot for other agents. Fires the `event.hold_released` webhook. **Requires Pro plan.**",
         "tags": [
@@ -7367,6 +7409,7 @@
     },
     "/v1/availability": {
       "get": {
+        "operationId": "getCrossAgentAvailability",
         "summary": "Get cross-agent availability",
         "description": "Returns intersected free/busy slots across multiple agents. Pass a comma-separated list of agent IDs in the `agents` query parameter. Optionally filter to specific calendar IDs with `calendars`. **Requires Pro plan.**",
         "tags": [
@@ -7544,6 +7587,7 @@
     },
     "/v1/webhooks": {
       "get": {
+        "operationId": "listWebhooks",
         "summary": "List webhooks",
         "tags": [
           "Webhooks"
@@ -7618,6 +7662,7 @@
         }
       },
       "post": {
+        "operationId": "createWebhook",
         "summary": "Create a webhook",
         "description": "Registers a new webhook endpoint. Chronary will deliver signed POST requests to your URL when subscribed events occur. The signing secret is returned only at creation time — store it securely.",
         "tags": [
@@ -7699,6 +7744,7 @@
     },
     "/v1/webhooks/{id}": {
       "get": {
+        "operationId": "getWebhook",
         "summary": "Get a webhook",
         "tags": [
           "Webhooks"
@@ -7770,6 +7816,7 @@
         }
       },
       "patch": {
+        "operationId": "updateWebhook",
         "summary": "Update a webhook",
         "tags": [
           "Webhooks"
@@ -7861,6 +7908,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteWebhook",
         "summary": "Delete a webhook",
         "tags": [
           "Webhooks"
@@ -7927,6 +7975,7 @@
     },
     "/v1/webhooks/{id}/deliveries": {
       "get": {
+        "operationId": "listWebhookDeliveries",
         "summary": "List webhook deliveries",
         "description": "Returns delivery history for a webhook subscription. Useful for diagnosing failed deliveries. Payload bodies are omitted by default — pass `include_payload=true` to include them. Requires an org-level API key; agent-scoped keys receive 403.",
         "tags": [
@@ -8070,6 +8119,7 @@
     },
     "/v1/ical-subscriptions/{id}": {
       "get": {
+        "operationId": "getIcalSubscription",
         "summary": "Get an iCal subscription",
         "tags": [
           "iCal Subscriptions"
@@ -8141,6 +8191,7 @@
         }
       },
       "patch": {
+        "operationId": "updateIcalSubscription",
         "summary": "Update an iCal subscription",
         "tags": [
           "iCal Subscriptions"
@@ -8232,6 +8283,7 @@
         }
       },
       "delete": {
+        "operationId": "deleteIcalSubscription",
         "summary": "Delete an iCal subscription",
         "tags": [
           "iCal Subscriptions"
@@ -8298,6 +8350,7 @@
     },
     "/v1/ical-subscriptions/{id}/sync": {
       "post": {
+        "operationId": "syncIcalSubscription",
         "summary": "Trigger an iCal subscription sync",
         "description": "Queues an iCal fetch-and-merge for the subscription. Returns 202 immediately with a status envelope; the actual sync completes asynchronously.",
         "tags": [
@@ -8372,6 +8425,7 @@
     },
     "/v1/usage": {
       "get": {
+        "operationId": "getUsage",
         "summary": "Get usage and quota stats",
         "description": "Returns current-month usage counters and plan limits for the authenticated organization.",
         "tags": [
@@ -8423,6 +8477,7 @@
     },
     "/v1/audit-log": {
       "get": {
+        "operationId": "listAuditLog",
         "summary": "List audit-log entries",
         "description": "Returns mutating API operations and auth lifecycle events for the calling organization, clamped to the per-tier retention window (Free: 7d, Pro: 90d, Custom: per-contract). Only org-level API keys may call this endpoint — agent-scoped keys receive 403.",
         "tags": [
@@ -8555,6 +8610,7 @@
     },
     "/v1/keys": {
       "post": {
+        "operationId": "createApiKey",
         "summary": "Create an agent-scoped API key",
         "description": "Creates a new `chr_ak_*` key scoped to a single agent. Only org-level API keys may call this endpoint. **Requires Pro plan.**",
         "tags": [
@@ -8660,6 +8716,7 @@
         }
       },
       "get": {
+        "operationId": "listApiKeys",
         "summary": "List agent-scoped API keys",
         "description": "Lists scoped keys for the authenticated organization. Only org-level API keys may call this endpoint. **Requires Pro plan.**",
         "tags": [
@@ -8747,6 +8804,7 @@
     },
     "/v1/keys/{id}": {
       "delete": {
+        "operationId": "revokeApiKey",
         "summary": "Revoke an agent-scoped API key",
         "description": "Revokes a scoped key by id. Only org-level API keys may call this endpoint. **Requires Pro plan.**",
         "tags": [
@@ -8848,6 +8906,7 @@
     },
     "/v1/scheduling/proposals": {
       "post": {
+        "operationId": "createProposal",
         "summary": "Create a scheduling proposal",
         "description": "Creates a new scheduling proposal with time slots. The organizer and all participants must be agents in your organization. **Requires Pro plan.**",
         "tags": [
@@ -9038,6 +9097,7 @@
         }
       },
       "get": {
+        "operationId": "listProposals",
         "summary": "List scheduling proposals",
         "tags": [
           "Scheduling"
@@ -9176,6 +9236,7 @@
     },
     "/v1/scheduling/proposals/{id}": {
       "get": {
+        "operationId": "getProposal",
         "summary": "Get a scheduling proposal",
         "description": "Returns the proposal with its slots and all responses. **Requires Pro plan.**",
         "tags": [
@@ -9284,6 +9345,7 @@
     },
     "/v1/scheduling/proposals/{id}/respond": {
       "post": {
+        "operationId": "respondToProposal",
         "summary": "Respond to a scheduling proposal",
         "description": "Submit an accept, decline, or counter response. Only agents listed in participant_agent_ids may respond. Each agent may respond exactly once. If all participants have now responded, auto-resolution runs automatically. **Requires Pro plan.**",
         "tags": [
@@ -9421,6 +9483,7 @@
     },
     "/v1/scheduling/proposals/{id}/resolve": {
       "post": {
+        "operationId": "resolveProposal",
         "summary": "Manually resolve a scheduling proposal",
         "description": "Runs the scoring algorithm immediately (without waiting for all participants to respond) and picks the best slot. If all existing responses are declines, the proposal is cancelled instead. **Requires Pro plan.**",
         "tags": [
@@ -9539,6 +9602,7 @@
     },
     "/v1/scheduling/proposals/{id}/cancel": {
       "post": {
+        "operationId": "cancelProposal",
         "summary": "Cancel a scheduling proposal",
         "description": "Cancels a pending proposal. Fires a proposal.cancelled webhook. **Requires Pro plan.**",
         "tags": [
@@ -9657,6 +9721,7 @@
     },
     "/v1/agent/sign-up": {
       "post": {
+        "operationId": "signUpAgent",
         "summary": "Agent self-signup",
         "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nThe returned key is bound to an *unverified* org. It is fully usable for reads and writes within the standard per-resource quotas, but the org cannot graduate from the introductory `free-agent-unverified` plan tier until you call `POST /v1/agent/verify` with the emailed OTP. Verification rotates the org to its normal plan (e.g. `free-agent` or — during the soft-launch window — `pro` via the auto-grant capacity gate).\n\nRate limit: 5 requests per 60 seconds per client IP.",
         "tags": [
@@ -9738,6 +9803,7 @@
     },
     "/v1/waitlist": {
       "post": {
+        "operationId": "joinWaitlist",
         "summary": "Join the waitlist",
         "description": "Join the Chronary soft-launch waitlist. Creates a row in the `waitlist` intake table — no\norganization is created until the prospect is approved by a founder and clicks the signed\ninvite link sent to their email.\n\nIdempotent on repeat hits: the same email returns 200 with the existing entry instead of 409.\nAn active (non-waitlisted) account at the same email returns 409 `email_taken`.\n\nRate limit: per-IP and per-email via the public rate limiter.",
         "tags": [
@@ -9820,6 +9886,7 @@
     },
     "/v1/capacity": {
       "get": {
+        "operationId": "getCapacity",
         "summary": "Public soft-launch capacity gauge",
         "description": "Returns the percentage of soft-launch slots currently occupied. Public, unauthenticated,\nIP rate-limited. Used by the marketing-site homepage to drive the capacity indicator and\nflip the CTA between \"Get early access\" (open) and \"Join waitlist\" (full).\n\nAbsolute slot counts are intentionally not exposed.\n\nAfter GA cutover the gauge is meaningless and always returns `{percent_full: 0, status: \"open\"}`.",
         "tags": [
@@ -9862,6 +9929,7 @@
     },
     "/v1/invite/verify": {
       "get": {
+        "operationId": "verifyInvite",
         "summary": "Verify a soft-launch invite token",
         "description": "Validates a signed invite token (purpose=`invite_claim`) and returns the email + expiry\nso the console can pre-fill the claim form. Read-only — does not consume the token.\nPublic, IP+token rate-limited.",
         "tags": [
@@ -9946,6 +10014,7 @@
     },
     "/v1/invite/claim": {
       "post": {
+        "operationId": "claimInvite",
         "summary": "Claim a soft-launch invite",
         "description": "Consumes a signed invite token and provisions an active org with `plan=pro`,\n`plan_source=soft_launch_invite`, `plan_expires_at=ga_date`. Mints a live + test API key\nand transitions the waitlist entry to `claimed`.\n\nOTP is intentionally skipped — token possession (delivered to the email captured at\nintake) is the email-ownership proof. Public, IP+token rate-limited.",
         "tags": [
@@ -10028,6 +10097,7 @@
     },
     "/v1/agent/verify": {
       "post": {
+        "operationId": "verifyAgentOtp",
         "summary": "Verify agent email OTP",
         "description": "Promote a restricted agent key to full access by submitting the 6-digit OTP received via email.\n\nOn success the org transitions `status: unverified → verified`, the plan upgrades from `free-agent-unverified` to `free-agent`, and the key immediately gains full write access.\n\nOn any failure (wrong OTP / expired / already burned after 10 attempts / unknown org) the response is a generic 400 validation_error — no information is leaked about which precondition failed.",
         "tags": [
@@ -10101,6 +10171,7 @@
     },
     "/v1/feedback": {
       "post": {
+        "operationId": "submitFeedback",
         "summary": "Submit agent feedback",
         "description": "Structured feedback for bugs, features, or friction. Logged to Chronary for triage — no DB record is created. Rate limited to **25 per day per organization** (UTC day). Available on all plans, including free.",
         "tags": [
