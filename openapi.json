@@ -396,6 +396,34 @@
             "example": 0,
             "description": "Priority for conflict resolution. Higher values pre-empt lower-priority overlapping holds."
           },
+          "recurrenceRule": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": null,
+            "description": "RFC 5545 RRULE subset (no \"RRULE:\" prefix) when this event is a recurring series master, e.g. \"FREQ=WEEKLY;BYDAY=MO,WE;COUNT=12\". Expansion is UTC-only. null = one-off event."
+          },
+          "recurrenceExdates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "example": [],
+            "description": "ISO 8601 starts of individually cancelled occurrences (EXDATE)."
+          },
+          "recurringEventId": {
+            "type": "string",
+            "example": "evt_01H9X4M2P5R8T6V0",
+            "description": "Present only on expanded instances (expand=true): the id of the recurring series master this instance belongs to."
+          },
+          "originalStartTime": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-01-20T09:00:00.000Z",
+            "description": "Present only on expanded instances: the occurrence start this instance was generated for."
+          },
           "deletedAt": {
             "type": [
               "string",
@@ -430,6 +458,8 @@
           "reminders",
           "holdExpiresAt",
           "holdPriority",
+          "recurrenceRule",
+          "recurrenceExdates",
           "deletedAt",
           "createdAt",
           "updatedAt"
@@ -1225,6 +1255,28 @@
               "limit"
             ]
           },
+          "recurring_events": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
+              },
+              "limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "example": 2500,
+                "description": "`null` means unlimited."
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ],
+            "description": "Active recurring event series (DB-counted masters). Deleting a series frees its slot."
+          },
           "scoped_keys": {
             "type": "object",
             "properties": {
@@ -1297,6 +1349,7 @@
           "availability_queries",
           "ical_subscriptions",
           "proposals",
+          "recurring_events",
           "scoped_keys",
           "holds",
           "cross_calendar_queries"
@@ -1748,6 +1801,11 @@
             },
             "maxItems": 5
           },
+          "recurrence_rule": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
           "hold_expires_at": {
             "type": "string",
             "format": "date-time"
@@ -1812,6 +1870,14 @@
               "maximum": 40320
             },
             "maxItems": 5
+          },
+          "recurrence_rule": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 256
           }
         }
       },
@@ -1855,6 +1921,23 @@
             ],
             "minimum": 0,
             "default": 0
+          },
+          "expand": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ],
+            "default": "false"
+          }
+        }
+      },
+      "DeleteEventQuery": {
+        "type": "object",
+        "properties": {
+          "occurrence_start": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -3721,6 +3804,13 @@
               "null"
             ],
             "description": "Max live agent-scoped API keys (`chr_ak_*`) per org."
+          },
+          "recurring_events": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Max active recurring event series per org. Free-plan series must also be bounded (COUNT or UNTIL) and end within 90 days of the series start."
           }
         },
         "required": [
@@ -3733,7 +3823,8 @@
           "ical_subscriptions",
           "proposals",
           "webhook_endpoints",
-          "scoped_keys"
+          "scoped_keys",
+          "recurring_events"
         ],
         "description": "Enforced caps. `null` for the custom-priced tier (negotiated separately)."
       },
@@ -5105,6 +5196,19 @@
             "required": false,
             "name": "offset",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "default": "false"
+            },
+            "required": false,
+            "name": "expand",
+            "in": "query"
           }
         ],
         "responses": {
@@ -6083,6 +6187,19 @@
             "required": false,
             "name": "offset",
             "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "default": "false"
+            },
+            "required": false,
+            "name": "expand",
+            "in": "query"
           }
         ],
         "responses": {
@@ -6432,6 +6549,7 @@
       "delete": {
         "operationId": "deleteCalendarEvent",
         "summary": "Delete a cal-scoped event",
+        "description": "Soft-deletes the event (or, for a recurring series, the whole series). Pass `occurrence_start` to cancel just one occurrence of a recurring series instead — the series lives on and the updated master is returned with 200.",
         "tags": [
           "Events"
         ],
@@ -6457,11 +6575,40 @@
             "description": "Event ID",
             "name": "id",
             "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "occurrence_start",
+            "in": "query"
           }
         ],
         "responses": {
+          "200": {
+            "description": "Single occurrence cancelled — returns the updated series master (only when occurrence_start was provided)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
           "204": {
             "description": "Event deleted"
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized — missing or invalid API key",
@@ -6475,6 +6622,16 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Event is not a recurring series (occurrence_start on a one-off event)",
             "content": {
               "application/json": {
                 "schema": {
@@ -7086,7 +7243,7 @@
       "delete": {
         "operationId": "deleteEvent",
         "summary": "Delete an event",
-        "description": "Delete an event by ID. The calendar is resolved internally from the event.",
+        "description": "Delete an event by ID. The calendar is resolved internally from the event. Pass `occurrence_start` to cancel just one occurrence of a recurring series — the series lives on and the updated master is returned with 200.",
         "tags": [
           "Events"
         ],
@@ -7106,11 +7263,40 @@
             "description": "Event ID",
             "name": "id",
             "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "occurrence_start",
+            "in": "query"
           }
         ],
         "responses": {
+          "200": {
+            "description": "Single occurrence cancelled — returns the updated series master (only when occurrence_start was provided)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Event"
+                }
+              }
+            }
+          },
           "204": {
             "description": "Event deleted"
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized — missing or invalid API key",
@@ -7134,6 +7320,16 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Event is not a recurring series (occurrence_start on a one-off event)",
             "content": {
               "application/json": {
                 "schema": {
