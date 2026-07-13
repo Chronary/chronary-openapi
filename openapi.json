@@ -581,16 +581,11 @@
             "type": "string",
             "format": "date-time",
             "example": "2025-01-20T09:30:00.000Z"
-          },
-          "available": {
-            "type": "boolean",
-            "example": true
           }
         },
         "required": [
           "start",
-          "end",
-          "available"
+          "end"
         ]
       },
       "AgentAvailabilityResponse": {
@@ -649,11 +644,76 @@
                 }
               ]
             }
+          },
+          "availability_state": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "stale",
+              "partial",
+              "unavailable"
+            ],
+            "description": "Whether all required Chronary and authorized human-calendar data was current for this result."
+          },
+          "sources": {
+            "type": "object",
+            "properties": {
+              "chronary": {
+                "type": "string",
+                "enum": [
+                  "current"
+                ]
+              },
+              "external": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "stale",
+                  "partial",
+                  "unavailable"
+                ]
+              },
+              "last_synced_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "chronary",
+              "external"
+            ]
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "availability_incomplete"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ]
+            }
           }
         },
         "required": [
           "agents",
-          "slots"
+          "slots",
+          "availability_state",
+          "sources",
+          "warnings"
         ]
       },
       "CalendarAvailabilityResponse": {
@@ -691,11 +751,76 @@
               ]
             },
             "description": "Flat busy-block list. Present only when include_busy=true."
+          },
+          "availability_state": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "stale",
+              "partial",
+              "unavailable"
+            ],
+            "description": "Whether all required Chronary and authorized human-calendar data was current for this result."
+          },
+          "sources": {
+            "type": "object",
+            "properties": {
+              "chronary": {
+                "type": "string",
+                "enum": [
+                  "current"
+                ]
+              },
+              "external": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "stale",
+                  "partial",
+                  "unavailable"
+                ]
+              },
+              "last_synced_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "chronary",
+              "external"
+            ]
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "availability_incomplete"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "code",
+                "message"
+              ]
+            }
           }
         },
         "required": [
           "calendar_id",
-          "slots"
+          "slots",
+          "availability_state",
+          "sources",
+          "warnings"
         ]
       },
       "Webhook": {
@@ -3682,6 +3807,616 @@
         },
         "required": [
           "status"
+        ]
+      },
+      "CalendarConnectionSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "google",
+              "microsoft"
+            ]
+          },
+          "account_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "availability",
+                "publishing"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 2,
+            "default": [
+              "availability"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "reauthorization_required",
+              "disconnected"
+            ]
+          },
+          "reauthorization_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "selected_calendar_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "last_authenticated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "account_label",
+          "status",
+          "reauthorization_reason",
+          "selected_calendar_count",
+          "last_authenticated_at",
+          "created_at"
+        ]
+      },
+      "CalendarConnectionDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "google",
+              "microsoft"
+            ]
+          },
+          "account_label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "availability",
+                "publishing"
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 2,
+            "default": [
+              "availability"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "reauthorization_required",
+              "disconnected"
+            ]
+          },
+          "reauthorization_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "calendars": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "access_role": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "primary": {
+                  "type": "boolean"
+                },
+                "timezone": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "availability_readable": {
+                  "type": "boolean"
+                },
+                "writable": {
+                  "type": "boolean"
+                },
+                "selected": {
+                  "type": "boolean"
+                },
+                "availability_source_active": {
+                  "type": "boolean"
+                },
+                "sync": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "enum": [
+                        "pending",
+                        "syncing",
+                        "current",
+                        "stale",
+                        "partial",
+                        "unavailable",
+                        null
+                      ]
+                    },
+                    "last_attempted_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "last_successful_sync_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "format": "date-time"
+                    },
+                    "last_error_category": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "last_attempted_at",
+                    "last_successful_sync_at",
+                    "last_error_category"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "access_role",
+                "primary",
+                "timezone",
+                "availability_readable",
+                "writable",
+                "selected",
+                "availability_source_active",
+                "sync"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "provider",
+          "account_label",
+          "status",
+          "reauthorization_reason",
+          "calendars"
+        ]
+      },
+      "ExternalCalendar": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "access_role": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "timezone": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "availability_readable": {
+            "type": "boolean"
+          },
+          "writable": {
+            "type": "boolean"
+          },
+          "selected": {
+            "type": "boolean"
+          },
+          "availability_source_active": {
+            "type": "boolean"
+          },
+          "sync": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "pending",
+                  "syncing",
+                  "current",
+                  "stale",
+                  "partial",
+                  "unavailable",
+                  null
+                ]
+              },
+              "last_attempted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_successful_sync_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "last_error_category": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "last_attempted_at",
+              "last_successful_sync_at",
+              "last_error_category"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "access_role",
+          "primary",
+          "timezone",
+          "availability_readable",
+          "writable",
+          "selected",
+          "availability_source_active",
+          "sync"
+        ]
+      },
+      "AvailabilityGrant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "string",
+            "enum": [
+              "selected_agents",
+              "all_current_agents",
+              "all_org_agents"
+            ]
+          },
+          "audience_cutoff_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "external_calendar_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "agent_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "audience",
+          "audience_cutoff_at",
+          "active",
+          "external_calendar_ids",
+          "agent_ids",
+          "created_at"
+        ]
+      },
+      "ExternalDestination": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "calendar_id": {
+            "type": "string"
+          },
+          "external_calendar_id": {
+            "type": "string"
+          },
+          "policy": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "confirmed_tentative"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "calendar_id",
+          "external_calendar_id",
+          "policy",
+          "active"
+        ]
+      },
+      "ConnectionLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "calendar_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "awaiting_human",
+              "in_progress",
+              "completed",
+              "declined",
+              "expired",
+              "cancelled"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "connection_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "calendar_id",
+          "status",
+          "expires_at"
+        ]
+      },
+      "CreatedConnectionLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "calendar_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "awaiting_human",
+              "in_progress",
+              "completed",
+              "declined",
+              "expired",
+              "cancelled"
+            ]
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "setup_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "reused": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "calendar_id",
+          "status",
+          "expires_at",
+          "setup_url",
+          "reused"
+        ]
+      },
+      "CalendarConnectionOAuthStart": {
+        "type": "object",
+        "properties": {
+          "authorization_url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "authorization_url"
+        ]
+      },
+      "CalendarConnectionMutation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused",
+              "reauthorization_required",
+              "disconnected"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ]
+      },
+      "CalendarConnectionRefresh": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "current",
+              "partial"
+            ]
+          },
+          "synced_calendars": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "status",
+          "synced_calendars"
+        ]
+      },
+      "CalendarConnectionList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarConnectionSummary"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ExternalCalendarList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalCalendar"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AvailabilityGrantList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AvailabilityGrant"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ExternalDestinationResult": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExternalDestination"
+              },
+              {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "Plan": {
@@ -10555,6 +11290,7 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -10568,33 +11304,54 @@
                         "availability",
                         "publishing"
                       ]
-                    }
+                    },
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "default": [
+                      "availability"
+                    ]
                   },
                   "setup_link_id": {
                     "type": "string"
                   }
-                },
-                "required": [
-                  "capabilities"
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Provider authorization URL",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionOAuthStart"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid request",
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid console session — these endpoints require a console JWT, not an API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — quota exceeded or operation not permitted",
             "content": {
               "application/json": {
                 "schema": {
@@ -10675,12 +11432,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Calendar connections",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionList"
                 }
               }
             }
@@ -10711,12 +11467,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Calendar connection detail and safe sync health",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionDetail"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10744,23 +11509,66 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": {}
+                "properties": {
+                  "capabilities": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "availability",
+                        "publishing"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "default": [
+                      "availability"
+                    ]
+                  },
+                  "selected_external_calendar_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 50
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Connection updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionMutation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10817,12 +11625,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "External calendars and safe sync health",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/ExternalCalendarList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10853,12 +11670,31 @@
         ],
         "responses": {
           "202": {
-            "description": "Successful response",
+            "description": "Refresh completed",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionRefresh"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Provider refresh failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10887,14 +11723,60 @@
             "in": "path"
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "capabilities": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "availability",
+                        "publishing"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "default": [
+                      "availability"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Provider authorization URL",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionOAuthStart"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10925,12 +11807,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Connection paused",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionMutation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10961,12 +11852,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Connection resumed",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CalendarConnectionMutation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -10986,23 +11886,62 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": {}
+                "properties": {
+                  "external_calendar_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "maxItems": 50
+                  },
+                  "audience": {
+                    "type": "string",
+                    "enum": [
+                      "selected_agents",
+                      "all_current_agents",
+                      "all_org_agents"
+                    ]
+                  },
+                  "agent_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 200,
+                    "default": []
+                  }
+                },
+                "required": [
+                  "external_calendar_ids",
+                  "audience"
+                ]
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Successful response",
+            "description": "Availability grant created",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/AvailabilityGrant"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -11021,12 +11960,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Availability grants",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/AvailabilityGrantList"
                 }
               }
             }
@@ -11057,12 +11995,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Availability grant",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/AvailabilityGrant"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -11090,23 +12037,70 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": {}
+                "properties": {
+                  "external_calendar_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 1,
+                    "maxItems": 50
+                  },
+                  "audience": {
+                    "type": "string",
+                    "enum": [
+                      "selected_agents",
+                      "all_current_agents",
+                      "all_org_agents"
+                    ]
+                  },
+                  "agent_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 200
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Availability grant updated",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/AvailabilityGrant"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -11146,6 +12140,7 @@
         "tags": [
           "Connection Setup Links"
         ],
+        "description": "Create a short-lived URL for a human to connect Google Calendar or Microsoft Outlook. The setup URL secret is returned only once; a reused pending link returns setup_url=null.",
         "parameters": [
           {
             "schema": {
@@ -11157,23 +12152,68 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": {}
+                "properties": {
+                  "capabilities": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "availability",
+                        "publishing"
+                      ]
+                    },
+                    "minItems": 1,
+                    "maxItems": 2,
+                    "default": [
+                      "availability"
+                    ]
+                  },
+                  "publication_policy": {
+                    "type": "string",
+                    "enum": [
+                      "none",
+                      "confirmed",
+                      "confirmed_tentative"
+                    ],
+                    "default": "none"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Successful response",
+            "description": "Connection setup link created",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/CreatedConnectionLink"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -11199,12 +12239,21 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Connection setup status; never replays the setup secret",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/ConnectionLink"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -11256,12 +12305,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Current opt-in publishing destination",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/ExternalDestinationResult"
                 }
               }
             }
@@ -11289,23 +12337,58 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": {}
+                "properties": {
+                  "external_calendar_id": {
+                    "type": "string"
+                  },
+                  "policy": {
+                    "type": "string",
+                    "enum": [
+                      "confirmed",
+                      "confirmed_tentative"
+                    ],
+                    "default": "confirmed"
+                  }
+                },
+                "required": [
+                  "external_calendar_id"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful response",
+            "description": "Publishing destination set or replaced",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {}
+                  "$ref": "#/components/schemas/ExternalDestination"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
