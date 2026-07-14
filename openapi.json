@@ -3841,7 +3841,8 @@
             "maxItems": 2,
             "default": [
               "availability"
-            ]
+            ],
+            "description": "Connection capabilities. \"availability\" reads free/busy to compute agent availability. \"publishing\" (writing confirmed Chronary events to the external calendar) is supported for Microsoft Outlook only — Google connections are availability-only and reject the \"publishing\" capability."
           },
           "status": {
             "type": "string",
@@ -3917,7 +3918,8 @@
             "maxItems": 2,
             "default": [
               "availability"
-            ]
+            ],
+            "description": "Connection capabilities. \"availability\" reads free/busy to compute agent availability. \"publishing\" (writing confirmed Chronary events to the external calendar) is supported for Microsoft Outlook only — Google connections are availability-only and reject the \"publishing\" capability."
           },
           "status": {
             "type": "string",
@@ -11309,7 +11311,8 @@
                     "maxItems": 2,
                     "default": [
                       "availability"
-                    ]
+                    ],
+                    "description": "Connection capabilities. \"availability\" reads free/busy to compute agent availability. \"publishing\" (writing confirmed Chronary events to the external calendar) is supported for Microsoft Outlook only — Google connections are availability-only and reject the \"publishing\" capability."
                   },
                   "setup_link_id": {
                     "type": "string"
@@ -11538,7 +11541,8 @@
                     "maxItems": 2,
                     "default": [
                       "availability"
-                    ]
+                    ],
+                    "description": "Connection capabilities. \"availability\" reads free/busy to compute agent availability. \"publishing\" (writing confirmed Chronary events to the external calendar) is supported for Microsoft Outlook only — Google connections are availability-only and reject the \"publishing\" capability."
                   },
                   "selected_external_calendar_ids": {
                     "type": "array",
@@ -11753,7 +11757,8 @@
                     "maxItems": 2,
                     "default": [
                       "availability"
-                    ]
+                    ],
+                    "description": "Connection capabilities. \"availability\" reads free/busy to compute agent availability. \"publishing\" (writing confirmed Chronary events to the external calendar) is supported for Microsoft Outlook only — Google connections are availability-only and reject the \"publishing\" capability."
                   }
                 }
               }
@@ -12181,7 +12186,8 @@
                     "maxItems": 2,
                     "default": [
                       "availability"
-                    ]
+                    ],
+                    "description": "Connection capabilities. \"availability\" reads free/busy to compute agent availability. \"publishing\" (writing confirmed Chronary events to the external calendar) is supported for Microsoft Outlook only — Google connections are availability-only and reject the \"publishing\" capability."
                   },
                   "publication_policy": {
                     "type": "string",
