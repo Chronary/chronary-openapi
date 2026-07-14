@@ -706,6 +706,20 @@
             "example": "2025-01-20T09:00:00.000Z",
             "description": "Present only on expanded instances: the occurrence start this instance was generated for."
           },
+          "external_sync": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "example": "not_configured",
+                "description": "not_configured | queued | published | skipped | failed"
+              }
+            },
+            "required": [
+              "status"
+            ],
+            "description": "Present only on create/update/hold mutation responses — the outcome of publishing this event to a connected human calendar (opt-in). Absent on read/list responses."
+          },
           "deletedAt": {
             "type": [
               "string",
@@ -1684,6 +1698,28 @@
             ],
             "description": "Active recurring event series (DB-counted masters). Deleting a series frees its slot."
           },
+          "booking_pages": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
+              },
+              "limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "example": 2500,
+                "description": "`null` means unlimited."
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ],
+            "description": "Active public booking pages (DB-counted). Deleting a page frees its slot."
+          },
           "scoped_keys": {
             "type": "object",
             "properties": {
@@ -1757,6 +1793,7 @@
           "ical_subscriptions",
           "proposals",
           "recurring_events",
+          "booking_pages",
           "scoped_keys",
           "holds",
           "cross_calendar_queries"
