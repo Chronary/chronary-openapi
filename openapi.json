@@ -303,6 +303,288 @@
           "offset"
         ]
       },
+      "BookingPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "bkp_01H9X4M2P5R8T6V0"
+          },
+          "org_id": {
+            "type": "string",
+            "example": "5f8e..."
+          },
+          "calendar_id": {
+            "type": "string",
+            "example": "cal_01H9X4M2P5R8T6V0"
+          },
+          "agent_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "agt_01H9X4M2P5R8T6V0",
+            "description": "Owner agent of the bound calendar; null for shared/org calendars."
+          },
+          "slug": {
+            "type": "string",
+            "example": "a1b2c3d4e5f6g7h8i9j0k1",
+            "description": "Unguessable public token in the hosted URL."
+          },
+          "title": {
+            "type": "string",
+            "example": "Intro call"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "A 30-minute intro chat."
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "example": 30
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "example": 0,
+            "description": "Padding added before and after each existing event when computing slots."
+          },
+          "window_days": {
+            "type": "integer",
+            "example": 14,
+            "description": "How far ahead bookings are allowed."
+          },
+          "min_notice_minutes": {
+            "type": "integer",
+            "example": 0,
+            "description": "Minimum lead time before a bookable slot."
+          },
+          "timezone": {
+            "type": "string",
+            "example": "America/Los_Angeles"
+          },
+          "availability_constraints": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "example": "09:00",
+                  "description": "HH:MM 24-hour"
+                },
+                "end": {
+                  "type": "string",
+                  "example": "17:00",
+                  "description": "HH:MM 24-hour"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ]
+            },
+            "example": {
+              "mon": {
+                "start": "09:00",
+                "end": "17:00"
+              }
+            },
+            "description": "Weekly working hours; null = any time inside the window (calendar events still block)."
+          },
+          "active": {
+            "type": "boolean",
+            "example": true
+          },
+          "bookings_count": {
+            "type": "integer",
+            "example": 3,
+            "description": "Number of bookings made through this page."
+          },
+          "booking_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://api.chronary.ai/book/a1b2c3d4e5f6g7h8i9j0k1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-14T10:00:00.000Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-07-14T10:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "org_id",
+          "calendar_id",
+          "agent_id",
+          "slug",
+          "title",
+          "description",
+          "duration_minutes",
+          "buffer_minutes",
+          "window_days",
+          "min_notice_minutes",
+          "timezone",
+          "availability_constraints",
+          "active",
+          "bookings_count",
+          "booking_url",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "BookingPageList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BookingPage"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "example": 1
+          },
+          "limit": {
+            "type": "integer",
+            "example": 50
+          },
+          "offset": {
+            "type": "integer",
+            "example": 0
+          }
+        },
+        "required": [
+          "data",
+          "total",
+          "limit",
+          "offset"
+        ]
+      },
+      "BookingSlotsResponse": {
+        "type": "object",
+        "properties": {
+          "booking_page": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "example": "a1b2c3d4e5f6g7h8i9j0k1"
+              },
+              "title": {
+                "type": "string",
+                "example": "Intro call"
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "example": null
+              },
+              "duration_minutes": {
+                "type": "integer",
+                "example": 30
+              },
+              "timezone": {
+                "type": "string",
+                "example": "America/Los_Angeles"
+              }
+            },
+            "required": [
+              "slug",
+              "title",
+              "description",
+              "duration_minutes",
+              "timezone"
+            ]
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2026-07-15T16:00:00.000Z"
+                },
+                "end": {
+                  "type": "string",
+                  "format": "date-time",
+                  "example": "2026-07-15T16:30:00.000Z"
+                }
+              },
+              "required": [
+                "start",
+                "end"
+              ]
+            }
+          }
+        },
+        "required": [
+          "booking_page",
+          "slots"
+        ]
+      },
+      "BookingSubmissionResult": {
+        "type": "object",
+        "properties": {
+          "booking_page_id": {
+            "type": "string",
+            "example": "bkp_01H9X4M2P5R8T6V0"
+          },
+          "event": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "evt_01H9X4M2P5R8T6V0"
+              },
+              "title": {
+                "type": "string",
+                "example": "Intro call — Ada Lovelace"
+              },
+              "start_time": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2026-07-15T16:00:00.000Z"
+              },
+              "end_time": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2026-07-15T16:30:00.000Z"
+              },
+              "status": {
+                "type": "string",
+                "example": "confirmed"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "start_time",
+              "end_time",
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "booking_page_id",
+          "event"
+        ]
+      },
       "Event": {
         "type": "object",
         "properties": {
@@ -1874,6 +2156,421 @@
             ],
             "minimum": 0,
             "default": 0
+          }
+        }
+      },
+      "CreateBookingPage": {
+        "type": "object",
+        "properties": {
+          "calendar_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 480,
+            "default": 30
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120,
+            "default": 0
+          },
+          "window_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 365,
+            "default": 14
+          },
+          "min_notice_minutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40320,
+            "default": 0
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "default": "UTC"
+          },
+          "availability_constraints": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "mon": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "tue": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "wed": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "thu": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "fri": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "sat": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "sun": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              }
+            }
+          },
+          "active": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "calendar_id",
+          "title"
+        ]
+      },
+      "UpdateBookingPage": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 480
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 120
+          },
+          "window_days": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 365
+          },
+          "min_notice_minutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 40320
+          },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "availability_constraints": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "mon": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "tue": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "wed": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "thu": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "fri": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "sat": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              },
+              "sun": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  },
+                  "end": {
+                    "type": "string",
+                    "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+                  }
+                },
+                "required": [
+                  "start",
+                  "end"
+                ]
+              }
+            }
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ListBookingPagesQuery": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200,
+            "default": 50
+          },
+          "offset": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "default": 0
+          }
+        }
+      },
+      "SubmitBooking": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 320,
+            "format": "email"
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "start"
+        ]
+      },
+      "BookingSlotsQuery": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -4564,6 +5261,13 @@
               "null"
             ],
             "description": "Max active recurring event series per org. Free-plan series must also be bounded (COUNT or UNTIL) and end within 90 days of the series start."
+          },
+          "booking_pages": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Max active public booking pages per org."
           }
         },
         "required": [
@@ -4577,7 +5281,8 @@
           "proposals",
           "webhook_endpoints",
           "scoped_keys",
-          "recurring_events"
+          "recurring_events",
+          "booking_pages"
         ],
         "description": "Enforced caps. `null` for the custom-priced tier (negotiated separately)."
       },
@@ -6856,6 +7561,700 @@
           },
           "500": {
             "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/booking-pages": {
+      "post": {
+        "operationId": "createBookingPage",
+        "summary": "Create a booking page",
+        "description": "Create a public scheduling link for a calendar. An agent creates the page, then shares the returned `booking_url` with a human; when the human picks a slot, a confirmed event is created on the calendar and an `event.created` webhook fires with a `booking_page_id` correlation field.",
+        "tags": [
+          "Booking Pages"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBookingPage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking page created",
+            "headers": {
+              "X-Chronary-Plan": {
+                "description": "The current plan of the authenticated organization (free | pro | scale)",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "free",
+                    "pro",
+                    "scale"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — quota exceeded or operation not permitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "listBookingPages",
+        "summary": "List booking pages",
+        "tags": [
+          "Booking Pages"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "default": 0
+            },
+            "required": false,
+            "name": "offset",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of booking pages",
+            "headers": {
+              "X-Chronary-Plan": {
+                "description": "The current plan of the authenticated organization (free | pro | scale)",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "free",
+                    "pro",
+                    "scale"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPageList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/booking-pages/{id}": {
+      "get": {
+        "operationId": "getBookingPage",
+        "summary": "Get a booking page",
+        "tags": [
+          "Booking Pages"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "bkp_01H9X4M2P5R8T6V0",
+              "description": "Booking page ID"
+            },
+            "required": true,
+            "description": "Booking page ID",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking page details",
+            "headers": {
+              "X-Chronary-Plan": {
+                "description": "The current plan of the authenticated organization (free | pro | scale)",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "free",
+                    "pro",
+                    "scale"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateBookingPage",
+        "summary": "Update a booking page",
+        "tags": [
+          "Booking Pages"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "bkp_01H9X4M2P5R8T6V0",
+              "description": "Booking page ID"
+            },
+            "required": true,
+            "description": "Booking page ID",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBookingPage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated booking page",
+            "headers": {
+              "X-Chronary-Plan": {
+                "description": "The current plan of the authenticated organization (free | pro | scale)",
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "free",
+                    "pro",
+                    "scale"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteBookingPage",
+        "summary": "Delete a booking page",
+        "description": "Soft-deletes the booking page. Its hosted URL stops resolving; existing booked events are unaffected.",
+        "tags": [
+          "Booking Pages"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "bkp_01H9X4M2P5R8T6V0",
+              "description": "Booking page ID"
+            },
+            "required": true,
+            "description": "Booking page ID",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Booking page deleted"
+          },
+          "401": {
+            "description": "Unauthorized — missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/book/{slug}": {
+      "get": {
+        "operationId": "getBookingPageHosted",
+        "summary": "Hosted booking page (HTML)",
+        "description": "Public, server-rendered HTML scheduling page. No authentication — the unguessable slug is the credential. Pass `?slot=<ISO>` to render the confirmation form for a chosen slot.",
+        "tags": [
+          "Booking Pages"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "a1b2c3d4e5f6g7h8i9j0k1",
+              "description": "Public booking page slug"
+            },
+            "required": true,
+            "description": "Public booking page slug",
+            "name": "slug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "slot",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Hosted booking page",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown or inactive slug",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "submitBooking",
+        "summary": "Submit a booking",
+        "description": "Public booking submission. No authentication — the slug is the credential. Accepts JSON (returns JSON) or an HTML form (returns an HTML confirmation). Re-validates the chosen slot against live availability, creates a confirmed event, and fires an `event.created` webhook with `booking_page_id`.",
+        "tags": [
+          "Booking Pages"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "a1b2c3d4e5f6g7h8i9j0k1",
+              "description": "Public booking page slug"
+            },
+            "required": true,
+            "description": "Public booking page slug",
+            "name": "slug",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitBooking"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking confirmed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingSubmissionResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The slot is no longer available or was just taken",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The page is temporarily not accepting bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/book/{slug}/slots": {
+      "get": {
+        "operationId": "listBookingSlots",
+        "summary": "List available booking slots (JSON)",
+        "description": "Public JSON list of available slots for a booking page, for building a custom booking UI. No authentication. Slots are clamped to the page's min-notice and window.",
+        "tags": [
+          "Booking Pages"
+        ],
+        "security": [],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "a1b2c3d4e5f6g7h8i9j0k1",
+              "description": "Public booking page slug"
+            },
+            "required": true,
+            "description": "Public booking page slug",
+            "name": "slug",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "to",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Available slots",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingSlotsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited — 10 requests per second per key exceeded",
             "content": {
               "application/json": {
                 "schema": {
