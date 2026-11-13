@@ -1036,30 +1036,24 @@
             "example": "idle"
           },
           "current_event": {
-            "allOf": [
+            "description": "Currently active event, or null",
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/Event"
               },
               {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "description": "Currently active event, or null"
+                "type": "null"
               }
             ]
           },
           "next_event": {
-            "allOf": [
+            "description": "Next upcoming event, or null",
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/Event"
               },
               {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "description": "Next upcoming event, or null"
+                "type": "null"
               }
             ]
           },
@@ -4602,12 +4596,12 @@
           "created_after": {
             "type": "string",
             "format": "date-time",
-            "description": "Only deliveries created at or after this time (ISO 8601, UTC)"
+            "description": "Only deliveries created at or after this time (ISO 8601; `Z` or a numeric offset)"
           },
           "created_before": {
             "type": "string",
             "format": "date-time",
-            "description": "Only deliveries created before this time (ISO 8601, UTC)"
+            "description": "Only deliveries created before this time (ISO 8601; `Z` or a numeric offset)"
           },
           "delivery_id": {
             "type": "string",
@@ -7198,15 +7192,12 @@
         "type": "object",
         "properties": {
           "data": {
-            "allOf": [
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/ExternalDestination"
               },
               {
-                "type": [
-                  "object",
-                  "null"
-                ]
+                "type": "null"
               }
             ]
           }
@@ -7635,29 +7626,23 @@
             ]
           },
           "pending_upgrade_request": {
-            "allOf": [
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/UpgradeRequest"
               },
               {
-                "type": [
-                  "object",
-                  "null"
-                ]
+                "type": "null"
               }
             ]
           },
           "offer": {
-            "allOf": [
+            "description": "Founding-member offer for early-access accounts; null otherwise",
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/BillingOffer"
               },
               {
-                "type": [
-                  "object",
-                  "null"
-                ],
-                "description": "Founding-member offer for early-access accounts; null otherwise"
+                "type": "null"
               }
             ]
           },
@@ -15176,10 +15161,10 @@
             "schema": {
               "type": "string",
               "format": "date-time",
-              "description": "Only deliveries created at or after this time (ISO 8601, UTC)"
+              "description": "Only deliveries created at or after this time (ISO 8601; `Z` or a numeric offset)"
             },
             "required": false,
-            "description": "Only deliveries created at or after this time (ISO 8601, UTC)",
+            "description": "Only deliveries created at or after this time (ISO 8601; `Z` or a numeric offset)",
             "name": "created_after",
             "in": "query"
           },
@@ -15187,10 +15172,10 @@
             "schema": {
               "type": "string",
               "format": "date-time",
-              "description": "Only deliveries created before this time (ISO 8601, UTC)"
+              "description": "Only deliveries created before this time (ISO 8601; `Z` or a numeric offset)"
             },
             "required": false,
-            "description": "Only deliveries created before this time (ISO 8601, UTC)",
+            "description": "Only deliveries created before this time (ISO 8601; `Z` or a numeric offset)",
             "name": "created_before",
             "in": "query"
           },
