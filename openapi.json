@@ -2385,7 +2385,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2406,7 +2406,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2427,7 +2427,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2448,7 +2448,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2469,7 +2469,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2490,7 +2490,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2511,7 +2511,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2532,7 +2532,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2553,7 +2553,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2574,7 +2574,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2596,7 +2596,7 @@
                   "integer",
                   "null"
                 ],
-                "example": 2500,
+                "example": 100,
                 "description": "`null` means unlimited."
               }
             },
@@ -2711,28 +2711,28 @@
                   "integer",
                   "null"
                 ],
-                "example": 50000
+                "example": 1000
               },
               "events": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 2500
+                "example": 100
               },
               "webhook_deliveries": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 5000
+                "example": 1000
               },
               "availability_queries": {
                 "type": [
                   "integer",
                   "null"
                 ],
-                "example": 10000
+                "example": 100
               },
               "proposals": {
                 "type": [
@@ -17705,7 +17705,7 @@
       "post": {
         "operationId": "signUpAgent",
         "summary": "Agent self-signup",
-        "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nWhile sign-ups are paused (waitlist mode or early access full), every address gets the same 202 `{ waitlisted: true, message }` with no key and no `org_id`, whether it is new, already waitlisted or has an account.\n\nA new verification code for an unverified org is emailed at most once per 60 seconds, and at most 3 sign-up calls per hour and 10 per day are accepted for one address; past that the call returns the same opaque 200 and sends nothing. Wrong codes add up across re-sends: after 30, the code is burned and no new one is sent for 24 hours.\n\nThe returned key is bound to an *unverified* org. It is fully usable for reads and writes within the standard per-resource quotas, but the org cannot graduate from the introductory `free-agent-unverified` plan tier until you call `POST /v1/agent/verify` with the emailed OTP. Verification rotates the org to its normal plan (e.g. `free-agent` or — during the soft-launch window — `pro` via the auto-grant capacity gate) when early access has room; otherwise the org keeps Sandbox limits until a spot opens (see `POST /v1/agent/verify`).\n\nRate limits: 5 requests per 60 seconds per client IP, plus a per-network sign-up budget (default 20 per UTC hour and 50 per UTC day per IPv4 address or IPv6 /64), plus 10 sign-ups per UTC hour per email domain (large consumer providers such as gmail.com and outlook.com are exempt). Over any limit returns 429 `rate_limit_error` with a `Retry-After` header.\n\nDisposable (throwaway) email addresses are refused with 400 `disposable_email` (`param: \"email\"`). Use a permanent address.",
+        "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nWhile sign-ups are paused (waitlist mode or early access full), every address gets the same 202 `{ waitlisted: true, message }` with no key and no `org_id`, whether it is new, already waitlisted or has an account.\n\nA new verification code for an unverified org is emailed at most once per 60 seconds, and at most 3 sign-up calls per hour and 10 per day are accepted for one address; past that the call returns the same opaque 200 and sends nothing. Wrong codes add up across re-sends: after 30, the code is burned and no new one is sent for 24 hours.\n\nThe returned key is bound to an *unverified* org. It is fully usable for reads and writes within the standard per-resource quotas, but the org cannot graduate from the introductory `free-agent-unverified` plan tier until you call `POST /v1/agent/verify` with the emailed OTP. Verification rotates the org to its normal plan (`free` or — during the soft-launch window — `pro` via the auto-grant capacity gate) when early access has room; otherwise the org keeps Sandbox limits until a spot opens (see `POST /v1/agent/verify`).\n\nRate limits: 5 requests per 60 seconds per client IP, plus a per-network sign-up budget (default 20 per UTC hour and 50 per UTC day per IPv4 address or IPv6 /64), plus 10 sign-ups per UTC hour per email domain (large consumer providers such as gmail.com and outlook.com are exempt). Over any limit returns 429 `rate_limit_error` with a `Retry-After` header.\n\nDisposable (throwaway) email addresses are refused with 400 `disposable_email` (`param: \"email\"`). Use a permanent address.",
         "tags": [
           "Agent Auth"
         ],
@@ -18081,7 +18081,7 @@
       "post": {
         "operationId": "verifyAgentOtp",
         "summary": "Verify agent email OTP",
-        "description": "Promote a restricted agent key to full access by submitting the 6-digit OTP received via email.\n\nOn success the org transitions `status: unverified → verified`. The plan leaves the `free-agent-unverified` (Sandbox) tier: it moves to `free-agent` (or, during the soft-launch window, `pro` via the auto-grant capacity gate) and `sandbox_promotion` is `promoted`. Only before general availability, when early access is full, the email is still verified, the org keeps Sandbox limits, `sandbox_promotion` is `capacity_full`, and the org leaves Sandbox automatically once a spot opens, to the plan it would have got with room (`free-agent`, or `pro` while the soft-launch auto-grant is open); an `org.plan_changed` webhook announces it. `sandbox_promotion` is `null` when the org was no longer on Sandbox.\n\nOn any failure (wrong OTP / expired / already burned after 10 attempts / unknown org) the response is a generic 400 validation_error — no information is leaked about which precondition failed.",
+        "description": "Promote a restricted agent key to full access by submitting the 6-digit OTP received via email.\n\nOn success the org transitions `status: unverified → verified`. The plan leaves the `free-agent-unverified` (Sandbox) tier: it moves to `free` (or, during the soft-launch window, `pro` via the auto-grant capacity gate) and `sandbox_promotion` is `promoted`. Only before general availability, when early access is full, the email is still verified, the org keeps Sandbox limits, `sandbox_promotion` is `capacity_full`, and the org leaves Sandbox automatically once a spot opens, to the plan it would have got with room (`free`, or `pro` while the soft-launch auto-grant is open); an `org.plan_changed` webhook announces it. `sandbox_promotion` is `null` when the org was no longer on Sandbox.\n\nOn any failure (wrong OTP / expired / already burned after 10 attempts / unknown org) the response is a generic 400 validation_error — no information is leaked about which precondition failed.",
         "tags": [
           "Agent Auth"
         ],
