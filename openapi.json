@@ -70,7 +70,7 @@
               },
               "limit": {
                 "type": "integer",
-                "description": "quota_exceeded and count caps: the plan's limit for `metric`"
+                "description": "quota_exceeded and count caps: the limit that was enforced for `metric`"
               },
               "upgrade_url": {
                 "type": "string",
@@ -3225,7 +3225,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "q": {
             "type": "string",
@@ -3370,7 +3371,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "q": {
             "type": "string",
@@ -3401,7 +3403,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "q": {
             "type": "string",
@@ -3787,7 +3790,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "calendar_id": {
             "type": "string",
@@ -4024,7 +4028,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "expand": {
             "type": "string",
@@ -4075,7 +4080,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "expand": {
             "type": "string",
@@ -4215,7 +4221,8 @@
             ]
           },
           "calendars": {
-            "type": "string"
+            "type": "string",
+            "description": "Comma-separated calendar ids whose busy time also blocks slots, at most 50"
           },
           "include_busy": {
             "type": "string",
@@ -4545,7 +4552,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "expand": {
             "type": "string",
@@ -4569,7 +4577,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           },
           "status": {
             "type": "string",
@@ -4764,7 +4773,8 @@
               "null"
             ],
             "minimum": 0,
-            "default": 0
+            "default": 0,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
           }
         }
       },
@@ -7139,11 +7149,15 @@
           "synced_calendars": {
             "type": "integer",
             "minimum": 0
+          },
+          "refreshed": {
+            "type": "boolean"
           }
         },
         "required": [
           "status",
-          "synced_calendars"
+          "synced_calendars",
+          "refreshed"
         ]
       },
       "CalendarConnectionList": {
@@ -7981,6 +7995,13 @@
               "null"
             ],
             "description": "Max active public booking pages per org."
+          },
+          "calendar_connections": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Max connected Google or Microsoft calendar accounts per org. Reconnecting an account already connected never counts as a new one."
           }
         },
         "required": [
@@ -7995,7 +8016,8 @@
           "webhook_endpoints",
           "scoped_keys",
           "recurring_events",
-          "booking_pages"
+          "booking_pages",
+          "calendar_connections"
         ],
         "description": "Enforced caps. `null` for the custom-priced tier (negotiated separately)."
       },
@@ -8051,6 +8073,132 @@
                   "required": [
                     "status",
                     "ts"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/deep": {
+      "get": {
+        "operationId": "deepHealthCheck",
+        "summary": "Deep health check",
+        "description": "Checks the database, key-value store and quota counter. Returns per-check `ok` or `fail` only; 503 when any check fails. Cached for 30 seconds. Does not require authentication.",
+        "tags": [
+          "System"
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "All checks passed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ],
+                      "example": "ok"
+                    },
+                    "checks": {
+                      "type": "object",
+                      "properties": {
+                        "db": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail"
+                          ]
+                        },
+                        "kv": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail"
+                          ]
+                        },
+                        "quota_do": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "db",
+                        "kv",
+                        "quota_do"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "checks"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited"
+          },
+          "503": {
+            "description": "At least one check failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok",
+                        "degraded"
+                      ],
+                      "example": "ok"
+                    },
+                    "checks": {
+                      "type": "object",
+                      "properties": {
+                        "db": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail"
+                          ]
+                        },
+                        "kv": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail"
+                          ]
+                        },
+                        "quota_do": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "db",
+                        "kv",
+                        "quota_do"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "checks"
                   ]
                 }
               }
@@ -9963,9 +10111,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -10440,9 +10590,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -10718,9 +10870,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -10938,9 +11092,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -11026,7 +11182,7 @@
       "get": {
         "operationId": "getAgentAvailability",
         "summary": "Get agent availability",
-        "description": "Returns free/busy slots for all calendars owned by the agent.",
+        "description": "Returns free/busy slots for all calendars owned by the agent. The `start`..`end` range is at most the plan's availability range (30 days on Free and Developer, 90 on Pro); a longer range returns `400 validation_error`.",
         "tags": [
           "Availability"
         ],
@@ -11232,9 +11388,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           }
@@ -11444,9 +11602,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -12132,9 +12292,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -13033,9 +13195,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -13518,7 +13682,7 @@
       "get": {
         "operationId": "getCalendarAvailability",
         "summary": "Get calendar availability",
-        "description": "Returns free/busy slots for a single calendar.",
+        "description": "Returns free/busy slots for a single calendar. The `start`..`end` range is at most the plan's availability range (30 days on Free and Developer, 90 on Pro); a longer range returns `400 validation_error`.",
         "tags": [
           "Availability"
         ],
@@ -14475,7 +14639,7 @@
       "get": {
         "operationId": "getCrossAgentAvailability",
         "summary": "Get cross-agent availability",
-        "description": "Returns intersected free/busy slots across multiple agents. Pass a comma-separated list of agent IDs in the `agents` query parameter. Optionally filter to specific calendar IDs with `calendars`. **Requires Pro plan.**",
+        "description": "Returns intersected free/busy slots across multiple agents. Pass a comma-separated list of agent IDs in the `agents` query parameter. Optionally filter to specific calendar IDs with `calendars` (at most 50). The plan caps the number of agents and the `start`..`end` range; over a cap returns `400 validation_error`. **Requires Pro plan.**",
         "tags": [
           "Availability"
         ],
@@ -14539,9 +14703,11 @@
           },
           {
             "schema": {
-              "type": "string"
+              "type": "string",
+              "description": "Comma-separated calendar ids whose busy time also blocks slots, at most 50"
             },
             "required": false,
+            "description": "Comma-separated calendar ids whose busy time also blocks slots, at most 50",
             "name": "calendars",
             "in": "query"
           },
@@ -14691,9 +14857,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -15113,9 +15281,11 @@
                 "null"
               ],
               "minimum": 0,
-              "default": 0
+              "default": 0,
+              "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters"
             },
             "required": false,
+            "description": "Rows to skip, at most 10000. To page deeper, use `cursor` where the list has it, or narrow the query with filters",
             "name": "offset",
             "in": "query"
           },
@@ -17690,7 +17860,7 @@
       "post": {
         "operationId": "signUpAgent",
         "summary": "Agent self-signup",
-        "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nWhile sign-ups are paused (waitlist mode or early access full), every address gets the same 202 `{ waitlisted: true, message }` with no key and no `org_id`, whether it is new, already waitlisted or has an account.\n\nA new verification code for an unverified org is emailed at most once per 60 seconds, and at most 3 sign-up calls per hour and 10 per day are accepted for one address; past that the call returns the same opaque 200 and sends nothing. Wrong codes add up across re-sends: after 30, the code is burned and no new one is sent for 24 hours.\n\nThe returned key is bound to an *unverified* org. It is fully usable for reads and writes within the standard per-resource quotas, but the org cannot graduate from the introductory `free-agent-unverified` plan tier until you call `POST /v1/agent/verify` with the emailed OTP. Verification rotates the org to its normal plan (`free` or — during the soft-launch window — `pro` via the auto-grant capacity gate) when early access has room; otherwise the org keeps Sandbox limits until a spot opens (see `POST /v1/agent/verify`).\n\nRate limits: 5 requests per 60 seconds per client IP, plus a per-network sign-up budget (default 20 per UTC hour and 50 per UTC day per IPv4 address or IPv6 /64), plus 10 sign-ups per UTC hour per email domain (large consumer providers such as gmail.com and outlook.com are exempt). Over any limit returns 429 `rate_limit_error` with a `Retry-After` header.\n\nDisposable (throwaway) email addresses are refused with 400 `disposable_email` (`param: \"email\"`). Use a permanent address.",
+        "description": "Create an organization and restricted API key by submitting an email and the current terms-of-service version.\n\nThree server-side dedup branches — all return HTTP 200 (or 409 only for stale ToS) to block email enumeration:\n\n- **New email** → returns `org_id` + `api_key`. OTP sent to email.\n- **Duplicate unverified-agent signup with current ToS** → opaque response (no `org_id`/`api_key`). OTP rotated and re-sent.\n- **Duplicate verified / console-origin org** → opaque response. No email sent.\n- **Stale `tos_version`** (agent-origin) → 409 with `current_version` hint.\n\nWhile sign-ups are paused (waitlist mode or early access full), every address gets the same 202 `{ waitlisted: true, message }` with no key and no `org_id`, whether it is new, already waitlisted or has an account.\n\nA new verification code for an unverified org is emailed at most once per 60 seconds, and at most 3 sign-up calls per hour and 10 per day are accepted for one address; past that the call returns the same opaque 200 and sends nothing. Wrong codes add up across re-sends: after 30, the code is burned and no new one is sent for 24 hours.\n\nThe returned key is bound to an *unverified* org. It is fully usable for reads and writes within the standard per-resource quotas, but the org cannot graduate from the introductory `free-agent-unverified` plan tier until you call `POST /v1/agent/verify` with the emailed OTP. Verification rotates the org to its normal plan (`free` or — during the soft-launch window — `pro` via the auto-grant capacity gate) when early access has room; otherwise the org keeps Sandbox limits until a spot opens (see `POST /v1/agent/verify`).\n\nRate limits: 5 requests per 60 seconds per client IP, plus a per-network sign-up budget (default 20 per UTC hour and 50 per UTC day per IPv4 address or IPv6 /64), plus 10 sign-ups per UTC hour per email domain (large consumer providers such as gmail.com and outlook.com are exempt). Over any limit returns 429 `rate_limit_error` with a `Retry-After` header.\n\nDisposable (throwaway) email addresses are refused with 400 `disposable_email` (`param: \"email\"`). Use a permanent address.\n\nAn address Chronary does not accept sign-ups from is refused with 400 `signup_blocked` (`param: \"email\"`) before any email is sent. Do not retry; contact support@chronary.ai.",
         "tags": [
           "Agent Auth"
         ],
@@ -17736,7 +17906,7 @@
             }
           },
           "400": {
-            "description": "Validation error, or `disposable_email` when the address is a disposable (throwaway) email.",
+            "description": "Validation error, `disposable_email` when the address is a disposable (throwaway) email, or `signup_blocked` when sign-up is not available for the address.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18434,6 +18604,16 @@
               }
             }
           },
+          "429": {
+            "description": "The plan calendar connection limit is reached (`quota_exceeded`, `metric: calendar_connections`). Reconnecting an account already connected is never refused.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "502": {
             "description": "The calendar provider rejected the authorization code",
             "content": {
@@ -18698,6 +18878,7 @@
             "SessionAuth": []
           }
         ],
+        "description": "Refreshes busy times from the provider now. At most one provider refresh per connection per 60 seconds: a call inside that window answers 202 with `refreshed: false` and makes no provider call. Requires the X-Chronary-CSRF header.",
         "parameters": [
           {
             "schema": {
@@ -18710,7 +18891,7 @@
         ],
         "responses": {
           "202": {
-            "description": "Refresh completed",
+            "description": "Refresh completed, or skipped (`refreshed: false`) because the connection was refreshed less than 60 seconds ago",
             "content": {
               "application/json": {
                 "schema": {
