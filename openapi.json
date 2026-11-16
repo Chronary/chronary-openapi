@@ -875,7 +875,7 @@
               "null"
             ],
             "example": null,
-            "description": "RFC 5545 RRULE subset (no \"RRULE:\" prefix) when this event is a recurring series master, e.g. \"FREQ=WEEKLY;BYDAY=MO,WE;COUNT=12\". Expansion is UTC-only. null = one-off event."
+            "description": "RFC 5545 RRULE subset (no \"RRULE:\" prefix) when this event is a recurring series master, e.g. \"FREQ=WEEKLY;BYDAY=MO,WE;COUNT=12\". Expanded in `timezone` when set (DST-correct: a weekly 16:00 stays 16:00 local), otherwise in UTC. null = one-off event."
           },
           "recurrenceExdates": {
             "type": "array",
@@ -884,7 +884,15 @@
               "format": "date-time"
             },
             "example": [],
-            "description": "ISO 8601 starts of individually cancelled occurrences (EXDATE)."
+            "description": "ISO 8601 starts of individually cancelled occurrences (EXDATE). When an update moves the series (start_time, recurrence_rule or timezone), each is carried to the new occurrence on the same local date; see droppedExdates."
+          },
+          "timezone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "America/Los_Angeles",
+            "description": "IANA time zone the series repeats in. BYDAY/BYMONTHDAY, the start_time match and a date-only UNTIL are evaluated in it; a local time skipped by a DST gap moves forward by the gap, a repeated one uses the first instance, and duration is elapsed time. null = UTC. Never follows later changes to the calendar time zone. Ignored for expansion on all-day events."
           },
           "recurringEventId": {
             "type": "string",
@@ -895,7 +903,37 @@
             "type": "string",
             "format": "date-time",
             "example": "2025-01-20T09:00:00.000Z",
-            "description": "Present only on expanded instances: the occurrence start this instance was generated for."
+            "description": "Present only on expanded instances: the occurrence start this instance was generated for (UTC instant; the occurrence_start for DELETE and reminders)."
+          },
+          "startLocal": {
+            "type": "string",
+            "example": "2025-01-20T09:00:00",
+            "description": "Present only on expanded instances: the start as local wall time in the series time zone (UTC when the series has none), without offset."
+          },
+          "utcOffset": {
+            "type": "string",
+            "example": "-08:00",
+            "description": "Present only on expanded instances: the UTC offset that applies at startLocal."
+          },
+          "dstAdjusted": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "gap",
+              null
+            ],
+            "example": null,
+            "description": "Present only on expanded instances: \"gap\" when the local start did not exist (DST spring-forward) and was moved forward by the gap; otherwise null."
+          },
+          "droppedExdates": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [],
+            "description": "Present only on update responses that moved a recurring series: cancelled occurrences whose local date has no occurrence in the new series. They were removed; re-cancel the right occurrence with DELETE ?occurrence_start= if needed."
           },
           "external_sync": {
             "type": "object",
@@ -947,6 +985,7 @@
           "holdPriority",
           "recurrenceRule",
           "recurrenceExdates",
+          "timezone",
           "deletedAt",
           "createdAt",
           "updatedAt"
@@ -3913,6 +3952,11 @@
             "minLength": 1,
             "maxLength": 256
           },
+          "timezone": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
           "hold_expires_at": {
             "type": "string",
             "format": "date-time"
@@ -3986,6 +4030,14 @@
             ],
             "minLength": 1,
             "maxLength": 256
+          },
+          "timezone": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "maxLength": 64
           }
         }
       },
