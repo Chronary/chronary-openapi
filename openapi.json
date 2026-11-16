@@ -7394,7 +7394,7 @@
               "null"
             ],
             "format": "date-time",
-            "description": "available: billing starts on this date if you subscribe now (null in the last ~2 days: billing starts at checkout). redeemed: trial end while trialing."
+            "description": "available: billing starts on this date if you subscribe now (the founding trial end, 12:00 UTC on the day `ends_at` falls on; null in the last ~2 days: billing starts at checkout). redeemed: trial end while trialing."
           },
           "discount_percent": {
             "type": [
@@ -7421,7 +7421,7 @@
               "given",
               null
             ],
-            "description": "redeemed: `required` while a trial with a Washington DC billing address waits for the human to choose \"Continue to paid Pro\" on the console Billing page (otherwise the subscription ends at the trial end, with no charge); `given` once they have. Null otherwise. Agents cannot give this consent."
+            "description": "redeemed: `required` while a trial with a Washington DC billing address waits for the human to choose \"Continue to paid Pro\" (or the plan billing starts on) on the console Billing page (otherwise the subscription ends at the trial end, with no charge); `given` once they have. Null otherwise. Agents cannot give this consent."
           }
         },
         "required": [
@@ -7504,7 +7504,7 @@
               "null"
             ],
             "example": null,
-            "description": "A plan switch scheduled for the end of the current period (a move from Pro down to Developer): the plan the subscription moves to. `plan` stays as it is until then. Null when nothing is scheduled."
+            "description": "A plan switch scheduled for the end of the current period (a move from Pro down to Developer): the plan the subscription moves to. During a founding trial (which grants Pro whatever the price) it is the plan billing starts on at the trial end. `plan` stays as it is until then. Null when nothing is scheduled."
           },
           "pending_plan_interval": {
             "type": [
@@ -7562,7 +7562,7 @@
               "interval",
               "tax_exclusive"
             ],
-            "description": "What the live subscription bills, for its plan and interval; null without one"
+            "description": "What the live subscription bills, for its plan and interval; null without one. During a founding trial heading to another plan (`pending_plan`), the price billing starts on at the trial end"
           },
           "has_billing_account": {
             "type": "boolean"
@@ -7622,7 +7622,7 @@
                 "via"
               ]
             },
-            "description": "Plans the account can move up to, monthly and annual, cheapest first. Empty when there is none."
+            "description": "Plans the account can move up to, monthly and annual, cheapest first. A founding account inside its window gets every plan (it keeps free Pro until the founding trial ends whichever it buys). Empty when there is none."
           },
           "upgrade_url": {
             "type": [
