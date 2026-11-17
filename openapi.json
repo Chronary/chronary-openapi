@@ -10454,6 +10454,7 @@
       "patch": {
         "operationId": "updateAgent",
         "summary": "Update an agent",
+        "description": "Setting `status` on a decommissioned agent restores it and makes its calendars writable again. A restored agent, its calendars and their recurring series count toward the plan again, so a restore that would go over the agent, calendar or recurring series limit of the plan is refused with 429 `quota_exceeded` (the same error as creating one over the limit).",
         "tags": [
           "Agents"
         ],
@@ -10522,7 +10523,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
+            "description": "Rate limited, or (`quota_exceeded`, `metric: agents`, `metric: calendars` or `metric: recurring_events`, with `limit` and the upgrade or contact link) restoring this decommissioned agent would go over the agent limit of the plan, its calendars over the calendar limit, or their recurring series over the recurring series limit",
             "content": {
               "application/json": {
                 "schema": {
@@ -10546,7 +10547,7 @@
       "delete": {
         "operationId": "deleteAgent",
         "summary": "Delete an agent",
-        "description": "Decommissions the agent and all associated calendars and events.",
+        "description": "Decommissions the agent and revokes its Agent keys. Its calendars and events are kept, and the calendars and their recurring series stop counting toward the calendar and recurring series limits of the plan. While the agent stays decommissioned its calendars are read-only: reads and the iCal feed keep working. Writes return 409 `agent_inactive`: events and holds, availability rules, calendar changes, creating a booking page, creating, responding to or resolving a proposal, creating, updating, syncing or resuming an iCal subscription, and creating a connection link. Deleting a calendar, updating, rotating or deleting an existing booking page, and pausing or deleting an iCal subscription stay allowed. The hosted booking pages are unavailable (404) while the agent is decommissioned, even after an update. Restore the agent with PATCH (status active or paused) to make the calendars writable again.",
         "tags": [
           "Agents"
         ],
@@ -10834,8 +10835,18 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the agent is decommissioned. Restore it (PATCH, status active) before adding calendars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
+            "description": "Rate limited, or (`quota_exceeded`, `metric: calendars`) the calendar limit of the plan is reached",
             "content": {
               "application/json": {
                 "schema": {
@@ -11599,6 +11610,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -11970,6 +11991,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -12294,6 +12325,16 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13046,7 +13087,7 @@
             }
           },
           "404": {
-            "description": "Resource not found",
+            "description": "No active booking page with this slug (unknown, inactive, deleted, held, or its calendar belongs to a decommissioned agent)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13409,6 +13450,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -13597,6 +13648,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -13704,7 +13765,7 @@
             }
           },
           "409": {
-            "description": "Event is not a recurring series (occurrence_start on a one-off event)",
+            "description": "Event is not a recurring series (occurrence_start on a one-off event); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13967,6 +14028,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -14098,6 +14169,16 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14304,6 +14385,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -14415,7 +14506,7 @@
             }
           },
           "409": {
-            "description": "Event is not a recurring series (occurrence_start on a one-off event)",
+            "description": "Event is not a recurring series (occurrence_start on a one-off event); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14538,7 +14629,7 @@
             }
           },
           "409": {
-            "description": "Event is not a hold, or the hold has already expired",
+            "description": "Event is not a hold, or the hold has already expired; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14661,7 +14752,7 @@
             }
           },
           "409": {
-            "description": "Event is not a hold",
+            "description": "Event is not a hold; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16135,6 +16226,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -16286,7 +16387,7 @@
             }
           },
           "409": {
-            "description": "Conflict: the feed is paused",
+            "description": "Conflict: the feed is paused; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16457,6 +16558,16 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -17300,6 +17411,16 @@
               }
             }
           },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
@@ -17654,7 +17775,7 @@
             }
           },
           "409": {
-            "description": "Proposal is not pending, agent already responded, or (on auto-resolve) the chosen slot conflicts with an existing hold",
+            "description": "Proposal is not pending, agent already responded, or (on auto-resolve) the chosen slot conflicts with an existing hold; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused) (the proposal calendar or a slot calendar; checked before the response is recorded)",
             "content": {
               "application/json": {
                 "schema": {
@@ -17775,7 +17896,7 @@
             }
           },
           "409": {
-            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), or the chosen slot conflicts with an existing hold",
+            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), or the chosen slot conflicts with an existing hold; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -19685,6 +19806,16 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         },
         "operationId": "createConnectionSetupLink"
@@ -19987,6 +20118,16 @@
           },
           "404": {
             "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
