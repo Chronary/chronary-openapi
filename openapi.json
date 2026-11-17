@@ -7453,7 +7453,8 @@
               "integer",
               "null"
             ],
-            "example": 50
+            "example": 50,
+            "description": "The founding discount in percent, or null when none applies. redeemed: the discount on the subscription. During a founding trial heading to a plan below Pro (`pending_plan`, no cancellation scheduled), the discount the account gets back by switching back to Pro before the trial ends (that plan carries none)."
           },
           "discount_months": {
             "type": [
@@ -7461,7 +7462,7 @@
               "null"
             ],
             "example": 12,
-            "description": "Paid months the discount covers (annual: the first year)"
+            "description": "Paid months the discount covers (annual: the first year); same cases as `discount_percent`"
           },
           "renewal_consent": {
             "type": [
@@ -7662,7 +7663,7 @@
                     "checkout",
                     "switch_plan"
                   ],
-                  "description": "How the owner buys it: `checkout` (no live subscription yet) or `switch_plan` (a live subscriber moves up from the console Billing page, which shows the prorated charge before confirming). Agents cannot do either; they ask with POST /v1/billing/upgrade-requests."
+                  "description": "How the owner buys it: `checkout` (no live subscription yet) or `switch_plan` (a live subscriber moves up from the console Billing page, which shows the prorated charge before confirming; during a founding trial heading below Pro, switching back to Pro charges nothing today and billing starts on Pro at the trial end). Agents cannot do either; they ask with POST /v1/billing/upgrade-requests."
                 }
               },
               "required": [
@@ -7674,7 +7675,7 @@
                 "via"
               ]
             },
-            "description": "Plans the account can move up to, monthly and annual, cheapest first. A founding account inside its window gets every plan (it keeps free Pro until the founding trial ends whichever it buys). Empty when there is none."
+            "description": "Plans the account can move up to, monthly and annual, cheapest first, at list price. A founding account inside its window gets every plan (it keeps free Pro until the founding trial ends whichever it buys). A founding trial heading to a plan below Pro (`pending_plan`, no cancellation scheduled) lists Pro via `switch_plan`: the plan billing would start on at the trial end if the owner switches back, with the founding discount in `offer.discount_percent`. Empty when there is none."
           },
           "upgrade_url": {
             "type": [
