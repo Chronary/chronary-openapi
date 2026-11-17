@@ -57,7 +57,7 @@
               },
               "required_plan": {
                 "type": "string",
-                "example": "pro",
+                "example": "developer",
                 "description": "plan_required: the cheapest plan you can buy that unlocks the feature"
               },
               "feature": {
@@ -6179,6 +6179,11 @@
             "maxLength": 200,
             "example": "Building an AI scheduling agent for sales teams.",
             "description": "\"What are you building?\" — free-text, capped at 200 chars."
+          },
+          "turnstile_token": {
+            "type": "string",
+            "maxLength": 2048,
+            "description": "Human-verification token from the challenge on the console waitlist form. Required only while the challenge is switched on; a missing or rejected token then returns 400 `challenge_failed`."
           }
         },
         "required": [
@@ -7318,7 +7323,7 @@
               "null"
             ],
             "example": "scoped_keys",
-            "description": "Pro feature that triggered the request"
+            "description": "Paid-plan feature that triggered the request"
           },
           "metric": {
             "type": [
@@ -8533,7 +8538,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -8600,7 +8605,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -9932,7 +9937,7 @@
             }
           },
           "409": {
-            "description": "`already_scheduled` — a deletion is already scheduled",
+            "description": "`already_scheduled` — a deletion is already scheduled; `conflict` — the account cannot be deleted at once right now (contact privacy@chronary.ai); nothing was deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -10271,7 +10276,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10351,7 +10356,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10425,7 +10430,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10517,7 +10522,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10583,7 +10588,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10728,7 +10733,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -10830,7 +10835,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11041,7 +11046,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11209,7 +11214,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11368,7 +11373,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11492,7 +11497,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11595,7 +11600,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11720,7 +11725,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11800,7 +11805,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11874,7 +11879,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -11966,7 +11971,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12032,7 +12037,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12117,7 +12122,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12192,7 +12197,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12298,7 +12303,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12411,7 +12416,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12499,7 +12504,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12605,7 +12610,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12671,7 +12676,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12803,7 +12808,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12902,7 +12907,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13071,7 +13076,7 @@
             }
           },
           "503": {
-            "description": "The page is temporarily not accepting bookings (error type `unavailable`). On a plan whose monthly events limit is a hard stop, public bookings stop once the owner has used 80% of that limit; the owner is emailed once per month.",
+            "description": "The page is temporarily not accepting bookings. Error type `unavailable`: on a plan whose monthly events limit is a hard stop, public bookings stop once the owner has used 80% of that limit; the owner is emailed once per month. Error type `temporarily_disabled` (with `Retry-After`): bookings are paused for everyone for a short time.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13155,7 +13160,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13302,7 +13307,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13405,7 +13410,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13490,7 +13495,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13593,7 +13598,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13709,7 +13714,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13868,7 +13873,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -13963,7 +13968,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14036,7 +14041,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14102,7 +14107,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14192,7 +14197,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14300,7 +14305,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14420,7 +14425,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14499,7 +14504,7 @@
             }
           },
           "403": {
-            "description": "External iCal events cannot be confirmed, or Pro plan required",
+            "description": "External iCal events cannot be confirmed, or a Developer or Pro plan required",
             "headers": {
               "X-Chronary-Plan": {
                 "description": "The current plan of the authenticated organization (free | developer | pro | scale)",
@@ -14543,7 +14548,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14569,7 +14574,7 @@
       "put": {
         "operationId": "releaseEvent",
         "summary": "Release a held event",
-        "description": "Manually releases an event with `status=\"hold\"` before its `hold_expires_at`. Frees the slot for other agents. Fires the `event.hold_released` webhook. Available on every plan (creating and confirming holds requires Pro).",
+        "description": "Manually releases an event with `status=\"hold\"` before its `hold_expires_at`. Frees the slot for other agents. Fires the `event.hold_released` webhook. Available on every plan (creating and confirming holds requires a Developer or Pro plan).",
         "tags": [
           "Events"
         ],
@@ -14666,7 +14671,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14692,7 +14697,7 @@
       "get": {
         "operationId": "getCrossAgentAvailability",
         "summary": "Get cross-agent availability",
-        "description": "Returns intersected free/busy slots across multiple agents. Pass a comma-separated list of agent IDs in the `agents` query parameter. Optionally filter to specific calendar IDs with `calendars` (at most 50). The plan caps the number of agents and the `start`..`end` range; over a cap returns `400 validation_error`. **Requires Pro plan.**",
+        "description": "Returns intersected free/busy slots across multiple agents. Pass a comma-separated list of agent IDs in the `agents` query parameter. Optionally filter to specific calendar IDs with `calendars` (at most 50). The plan caps the number of agents and the `start`..`end` range; over a cap returns `400 validation_error`. **Requires a Developer or Pro plan.**",
         "tags": [
           "Availability"
         ],
@@ -14861,7 +14866,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -14962,7 +14967,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15042,7 +15047,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15116,7 +15121,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15209,7 +15214,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15274,7 +15279,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15493,7 +15498,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15589,7 +15594,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -15720,7 +15725,7 @@
       "post": {
         "operationId": "replayWebhookDelivery",
         "summary": "Replay a webhook delivery",
-        "description": "Sends a `failed` or `dropped` delivery again as a **new** delivery with its own `delivery_id`; the original delivery and its attempts are not changed. The stored payload goes out unchanged (same event id), signed per attempt with the endpoint's current secret and sent to its current URL, with an `X-Chronary-Replay-Of` header naming the first delivery of the chain (the original, even when a replay is replayed). The replay follows the plan's normal retry schedule, counts toward the circuit breaker and counts toward the monthly `webhook_deliveries` quota (paid plans past the limit are still served, with `RateLimit-Soft-Exceeded: true`). Pending, delivered and test deliveries cannot be replayed, the endpoint must be active, and the payload must still be stored (30 days). Poll `GET /v1/webhooks/{id}/deliveries/{delivery_id}` with the new id for the result. Honors `Idempotency-Key`. Limited to 30 per minute per organization. Requires a Pro plan and an org-level API key; agent-scoped keys receive 403.",
+        "description": "Sends a `failed` or `dropped` delivery again as a **new** delivery with its own `delivery_id`; the original delivery and its attempts are not changed. The stored payload goes out unchanged (same event id), signed per attempt with the endpoint's current secret and sent to its current URL, with an `X-Chronary-Replay-Of` header naming the first delivery of the chain (the original, even when a replay is replayed). The replay follows the plan's normal retry schedule, counts toward the circuit breaker and counts toward the monthly `webhook_deliveries` quota (paid plans past the limit are still served, with `RateLimit-Soft-Exceeded: true`). Pending, delivered and test deliveries cannot be replayed, the endpoint must be active, and the payload must still be stored (30 days). Poll `GET /v1/webhooks/{id}/deliveries/{delivery_id}` with the new id for the result. Honors `Idempotency-Key`. Limited to 30 per minute per organization. Requires a Developer or Pro plan and an org-level API key; agent-scoped keys receive 403.",
         "tags": [
           "Webhooks"
         ],
@@ -15848,7 +15853,7 @@
       "post": {
         "operationId": "rotateWebhookSecret",
         "summary": "Rotate the signing secret",
-        "description": "Generates a new signing secret and returns it once. The new secret signs `X-Signature` from the next delivery attempt, including retries and test events already queued. The replaced secret keeps signing `X-Signature-Previous` (same format, same `X-Timestamp`) until `expire_old_in` has passed, so a receiver can switch secrets without rejecting deliveries; `now` drops it at once. `expire_old_in` is `now`, `1h`, `24h` (default) or `7d`. Rotating again inside a grace window replaces the previous secret, so at most two secrets are valid at a time. Works on paused and disabled endpoints and never changes `active`. An `Idempotency-Key` replay within 24 hours returns the same new secret. **Requires Pro plan** and an org-level API key (agent-scoped keys receive 403); a console session must have signed in within the last 5 minutes.",
+        "description": "Generates a new signing secret and returns it once. The new secret signs `X-Signature` from the next delivery attempt, including retries and test events already queued. The replaced secret keeps signing `X-Signature-Previous` (same format, same `X-Timestamp`) until `expire_old_in` has passed, so a receiver can switch secrets without rejecting deliveries; `now` drops it at once. `expire_old_in` is `now`, `1h`, `24h` (default) or `7d`. Rotating again inside a grace window replaces the previous secret, so at most two secrets are valid at a time. Works on paused and disabled endpoints and never changes `active`. An `Idempotency-Key` replay within 24 hours returns the same new secret. **Requires a Developer or Pro plan** and an org-level API key (agent-scoped keys receive 403); a console session must have signed in within the last 5 minutes.",
         "tags": [
           "Webhooks"
         ],
@@ -15965,7 +15970,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16039,7 +16044,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16131,7 +16136,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16196,7 +16201,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16291,7 +16296,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16376,7 +16381,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16461,7 +16466,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16513,7 +16518,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16817,7 +16822,7 @@
             "description": "Agent-scoped key cannot access this resource"
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16843,7 +16848,7 @@
       "post": {
         "operationId": "createApiKey",
         "summary": "Create an agent-scoped API key",
-        "description": "Creates a new `chr_ak_*` key scoped to a single agent. Only org-level API keys may call this endpoint. **Requires Pro plan.**",
+        "description": "Creates a new `chr_ak_*` key scoped to a single agent. Only org-level API keys may call this endpoint. **Requires a Developer or Pro plan.**",
         "tags": [
           "API Keys"
         ],
@@ -16937,7 +16942,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17011,7 +17016,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17101,7 +17106,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17127,7 +17132,7 @@
       "post": {
         "operationId": "createProposal",
         "summary": "Create a scheduling proposal",
-        "description": "Creates a new scheduling proposal with time slots. The organizer and all participants must be agents in your organization. **Requires Pro plan.**",
+        "description": "Creates a new scheduling proposal with time slots. The organizer and all participants must be agents in your organization. **Requires a Developer or Pro plan.**",
         "tags": [
           "Scheduling"
         ],
@@ -17296,7 +17301,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17422,7 +17427,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17448,7 +17453,7 @@
       "get": {
         "operationId": "getProposal",
         "summary": "Get a scheduling proposal",
-        "description": "Returns the proposal with its slots and all responses. Available on every plan (creating proposals requires Pro).",
+        "description": "Returns the proposal with its slots and all responses. Available on every plan (creating proposals requires a Developer or Pro plan).",
         "tags": [
           "Scheduling"
         ],
@@ -17519,7 +17524,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -17545,7 +17550,7 @@
       "post": {
         "operationId": "respondToProposal",
         "summary": "Respond to a scheduling proposal",
-        "description": "Submit an accept, decline, or counter response. Only agents listed in participant_agent_ids may respond. Each agent may respond exactly once. If all participants have now responded, auto-resolution runs automatically. **Requires Pro plan.**",
+        "description": "Submit an accept, decline, or counter response. Only agents listed in participant_agent_ids may respond. Each agent may respond exactly once. If all participants have now responded, auto-resolution runs automatically. **Requires a Developer or Pro plan.**",
         "tags": [
           "Scheduling"
         ],
@@ -17615,7 +17620,7 @@
             }
           },
           "403": {
-            "description": "Agent is not a participant, or Pro plan required",
+            "description": "Agent is not a participant, or a Developer or Pro plan required",
             "headers": {
               "X-Chronary-Plan": {
                 "description": "The current plan of the authenticated organization (free | developer | pro | scale)",
@@ -17685,7 +17690,7 @@
       "post": {
         "operationId": "resolveProposal",
         "summary": "Manually resolve a scheduling proposal",
-        "description": "Runs the scoring algorithm immediately (without waiting for all participants to respond) and picks the best slot. If all existing responses are declines, the proposal is cancelled instead. **Requires Pro plan.**",
+        "description": "Runs the scoring algorithm immediately (without waiting for all participants to respond) and picks the best slot. If all existing responses are declines, the proposal is cancelled instead. **Requires a Developer or Pro plan.**",
         "tags": [
           "Scheduling"
         ],
@@ -17806,7 +17811,7 @@
       "post": {
         "operationId": "cancelProposal",
         "summary": "Cancel a scheduling proposal",
-        "description": "Cancels a pending proposal. Fires a proposal.cancelled webhook. Available on every plan, so an org that moved to Free can still cancel proposals it made on Pro.",
+        "description": "Cancels a pending proposal. Fires a proposal.cancelled webhook. Available on every plan, so an org that moved to Free can still cancel proposals it made on a paid plan.",
         "tags": [
           "Scheduling"
         ],
@@ -17887,7 +17892,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18005,7 +18010,7 @@
       "post": {
         "operationId": "joinWaitlist",
         "summary": "Join the waitlist",
-        "description": "Join the Chronary soft-launch waitlist. Creates a row in the `waitlist` intake table — no\norganization is created until the prospect is approved by a founder and clicks the signed\ninvite link sent to their email.\n\nEvery accepted request returns the same 202 body: a new email, one already on the list and one\nwith an active account are not told apart, and no entry fields are returned. Only a new email is\nsent the confirmation email.\n\nRate limit: per-IP and per-email via the public rate limiter.",
+        "description": "Join the Chronary soft-launch waitlist. Creates a row in the `waitlist` intake table — no\norganization is created until the prospect is approved by a founder and clicks the signed\ninvite link sent to their email.\n\nEvery accepted request returns the same 202 body: a new email, one already on the list and one\nwith an active account are not told apart, and no entry fields are returned. Only a new email is\nsent the confirmation email.\n\nRate limit: per-IP and per-email via the public rate limiter.\n\nHuman check: while it is switched on, the request needs the `turnstile_token` from the console form,\nand a missing or rejected token returns 400 `challenge_failed`.",
         "tags": [
           "Waitlist"
         ],
@@ -18052,7 +18057,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18095,7 +18100,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18180,7 +18185,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18263,7 +18268,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18337,7 +18342,7 @@
             }
           },
           "429": {
-            "description": "Rate limited: the per-API-key rate limit was exceeded (10 requests/second per API key on Free, 25 on Developer, 50 on Pro)",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18965,6 +18970,16 @@
           },
           "502": {
             "description": "Provider refresh failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`temporarily_disabled` (with `Retry-After`): sync with this provider is paused for a short time",
             "content": {
               "application/json": {
                 "schema": {
