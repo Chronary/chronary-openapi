@@ -2639,6 +2639,28 @@
             ],
             "description": "Active public booking pages (DB-counted). Deleting a page frees its slot."
           },
+          "calendar_connections": {
+            "type": "object",
+            "properties": {
+              "used": {
+                "type": "integer",
+                "example": 120
+              },
+              "limit": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "example": 100,
+                "description": "`null` means unlimited."
+              }
+            },
+            "required": [
+              "used",
+              "limit"
+            ],
+            "description": "Live Google and Microsoft calendar connections (provider accounts, DB-counted). Disconnecting one frees its slot. `limit` is the plan cap (`null` = unlimited)."
+          },
           "scoped_keys": {
             "type": "object",
             "properties": {
@@ -2720,6 +2742,7 @@
           "proposals",
           "recurring_events",
           "booking_pages",
+          "calendar_connections",
           "scoped_keys",
           "holds",
           "cross_calendar_queries"
@@ -20235,7 +20258,7 @@
     "/v1/billing/upgrade-requests": {
       "post": {
         "operationId": "createUpgradeRequest",
-        "summary": "Ask a human to upgrade to Pro",
+        "summary": "Ask a human to upgrade the plan",
         "description": "Creates an upgrade request and emails the account owner. Give `approval_url` to your human — only a human can pay. At most one request is pending per org: a repeat call returns it with `reused: true` (200). Poll `GET /v1/billing/upgrade-requests/{id}` at most once a minute. Org-level API keys only; signed-in humans use the console Billing page instead. Honors `Idempotency-Key`.",
         "tags": [
           "Billing"
