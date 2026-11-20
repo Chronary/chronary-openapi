@@ -4858,7 +4858,7 @@
         "properties": {
           "version": {
             "type": "string",
-            "example": "2026-11-12"
+            "example": "2026-11-18"
           },
           "effective_at": {
             "type": "string",
@@ -4866,7 +4866,7 @@
           },
           "url": {
             "type": "string",
-            "example": "https://chronary.ai/terms/v/2026-11-12"
+            "example": "https://chronary.ai/terms/v/2026-11-18"
           },
           "material": {
             "type": "boolean",
@@ -4886,7 +4886,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "2026-11-12",
+            "example": "2026-11-18",
             "description": "Must equal `CURRENT_TERMS_VERSION`."
           }
         },
@@ -4902,7 +4902,7 @@
             "properties": {
               "accepted_terms_version": {
                 "type": "string",
-                "example": "2026-11-12"
+                "example": "2026-11-18"
               },
               "accepted_terms_at": {
                 "type": "string",
@@ -4925,7 +4925,7 @@
         "properties": {
           "accepted_terms_version": {
             "type": "string",
-            "example": "2026-11-12"
+            "example": "2026-11-18"
           },
           "accepted_terms_at": {
             "type": "string",
@@ -6061,7 +6061,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "2026-11-12"
+            "example": "2026-11-18"
           }
         },
         "required": [
@@ -6178,6 +6178,86 @@
           "message"
         ]
       },
+      "AgentAnonymousSignUpRequest": {
+        "type": "object",
+        "properties": {
+          "agent_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "example": "Support Agent"
+          },
+          "tos_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "example": "2026-11-18"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "playground",
+              "agent"
+            ],
+            "example": "agent",
+            "description": "Who is signing up: `playground` for the chronary.ai playground page, `agent` (the default) for everything else. Changes nothing about the organization; any other value is a 400. A `playground` sign-up sent from the chronary.ai page (its browser `Origin`) with a known `consent_variant` records the Terms acceptance as the person's; any other sign-up records it as the agent operator's."
+          },
+          "consent_variant": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "example": "playground-2026-11-18",
+            "description": "Playground only: the id of the Terms notice the person saw next to the start button (known ids: `playground-2026-11-18`). Stored with the Terms acceptance; ignored unless `source` is `playground`. An id the API does not know is accepted, but no notice text is stored and the acceptance is recorded as the agent operator's."
+          }
+        },
+        "required": [
+          "agent_name",
+          "tos_version"
+        ]
+      },
+      "AgentAnonymousSignUpResponse": {
+        "type": "object",
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+          },
+          "agent_id": {
+            "type": "string",
+            "example": "agt_abcd1234xyz0"
+          },
+          "api_key": {
+            "type": "string",
+            "example": "chr_sk_...",
+            "description": "Organization key, shown once. Works at once, at Sandbox limits, until `expires_at`."
+          },
+          "claim_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://console.chronary.ai/claim/anonymous#token=...",
+            "description": "Shown once. Give it to the person who should own this calendar: opening it while signed in to the console moves everything into their account."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-11-20T12:00:00.000Z",
+            "description": "When the key and the claim link stop working; the organization and its data are then deleted, unless claimed first."
+          },
+          "plan": {
+            "type": "string",
+            "example": "free-agent-unverified"
+          }
+        },
+        "required": [
+          "org_id",
+          "agent_id",
+          "api_key",
+          "claim_url",
+          "expires_at",
+          "plan"
+        ]
+      },
       "WaitlistJoinRequest": {
         "type": "object",
         "properties": {
@@ -6195,7 +6275,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "2026-11-12"
+            "example": "2026-11-18"
           },
           "intent": {
             "type": "string",
@@ -9012,7 +9092,7 @@
             }
           },
           "403": {
-            "description": "`csrf_required` — missing CSRF header",
+            "description": "`csrf_required` — missing CSRF header, or `anonymous_org_restricted` — a claimable organization cannot set an email",
             "content": {
               "application/json": {
                 "schema": {
@@ -15151,7 +15231,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden: operation not permitted (an Agent key), or `anonymous_org_restricted` (a claimable organization cannot create webhook endpoints until it is claimed)",
             "content": {
               "application/json": {
                 "schema": {
@@ -18150,6 +18230,90 @@
         }
       }
     },
+    "/v1/agent/sign-up/anonymous": {
+      "post": {
+        "operationId": "signUpAgentAnonymous",
+        "summary": "Agent sign-up without an email (claimable)",
+        "description": "Create a claimable organization with no email: its default agent, an Organization key and a one-time claim link. The key works at once, at Sandbox limits.\n\nSending the current `tos_version` accepts the [Terms of Service](https://chronary.ai/terms) for the person or organization the agent acts for. A person who claims the organization takes it on under the Terms they accepted for their own account.\n\n- The organization sends and receives no email and cannot create webhook endpoints, set an email or call `POST /v1/agent/verify` (403 `anonymous_org_restricted`).\n- Give `claim_url` to the person who should own the calendar. Opening it while signed in to the console moves the agents, calendars and events into their account; this Organization key stops working then.\n- Unclaimed, the key stops at `expires_at` (72 hours after sign-up) with 401 `key_expired`, and the organization and its data are deleted at the next cleanup.\n\nLimits: 5 requests per 60 seconds per client IP, 3 sign-ups per UTC hour and 10 per UTC day per IPv4 address or IPv6 /64 (429 `rate_limit_error` with `Retry-After`), and a global daily cap (503 `anonymous_signup_capacity`). While the counter behind that cap is briefly unreachable, the sign-up is refused with 503 `temporarily_disabled` and `Retry-After`. An attempt refused with 503 `anonymous_signup_capacity` still uses up one of the sign-ups for that network; a 503 `temporarily_disabled` gives it back.",
+        "tags": [
+          "Agent Auth"
+        ],
+        "security": [],
+        "x-agent-hint": "Use when no email inbox is available. Returns a working key and a claim_url to hand to a human before expires_at; unclaimed, everything is deleted after that.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentAnonymousSignUpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Claimable organization created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentAnonymousSignUpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — invalid request body or query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Submitted tos_version is out of date. Includes current_version hint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited: per-IP burst limit or per-network sign-up budget. See `Retry-After`.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "`anonymous_signup_disabled` (this sign-up is switched off here), `signups_paused` (all sign-ups are paused), `anonymous_signup_capacity` (global daily cap; see `Retry-After`), or `temporarily_disabled` (the counter behind the daily cap is briefly unreachable, so nothing is created; see `Retry-After`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/waitlist": {
       "post": {
         "operationId": "joinWaitlist",
@@ -18477,6 +18641,16 @@
           },
           "401": {
             "description": "Unauthorized — missing or invalid API key (`authentication_error`), or a key past its `expires_at` (`key_expired`: roll it or create a new one)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "`anonymous_org_restricted`: a claimable organization (POST /v1/agent/sign-up/anonymous) has no email to verify; use its claim link.",
             "content": {
               "application/json": {
                 "schema": {
