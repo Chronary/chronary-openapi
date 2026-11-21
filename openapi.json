@@ -16853,7 +16853,7 @@
       "get": {
         "operationId": "listAuditLog",
         "summary": "List audit-log entries",
-        "description": "Returns mutating API operations and auth lifecycle events for the calling organization, clamped to the per-tier retention window (Free: 3 days, Developer: 30 days, Pro: 90 days, Custom: per contract). Only org-level API keys may call this endpoint — agent-scoped keys receive 403.",
+        "description": "Returns mutating API operations and auth lifecycle events for the calling organization, clamped to the per-tier retention window (Free: 3 days, Developer: 30 days, Pro: 90 days, Custom: no fixed window). Only org-level API keys may call this endpoint — agent-scoped keys receive 403.",
         "tags": [
           "Audit Log"
         ],
