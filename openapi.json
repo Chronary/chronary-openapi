@@ -4858,7 +4858,7 @@
         "properties": {
           "version": {
             "type": "string",
-            "example": "2026-11-18"
+            "example": "2026-11-20"
           },
           "effective_at": {
             "type": "string",
@@ -4866,7 +4866,7 @@
           },
           "url": {
             "type": "string",
-            "example": "https://chronary.ai/terms/v/2026-11-18"
+            "example": "https://chronary.ai/terms/v/2026-11-20"
           },
           "material": {
             "type": "boolean",
@@ -4886,7 +4886,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "2026-11-18",
+            "example": "2026-11-20",
             "description": "Must equal `CURRENT_TERMS_VERSION`."
           }
         },
@@ -4902,7 +4902,7 @@
             "properties": {
               "accepted_terms_version": {
                 "type": "string",
-                "example": "2026-11-18"
+                "example": "2026-11-20"
               },
               "accepted_terms_at": {
                 "type": "string",
@@ -4925,7 +4925,7 @@
         "properties": {
           "accepted_terms_version": {
             "type": "string",
-            "example": "2026-11-18"
+            "example": "2026-11-20"
           },
           "accepted_terms_at": {
             "type": "string",
@@ -6061,7 +6061,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "2026-11-18"
+            "example": "2026-11-20"
           }
         },
         "required": [
@@ -6191,7 +6191,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
-            "example": "2026-11-18"
+            "example": "2026-11-20"
           },
           "source": {
             "type": "string",
@@ -6275,7 +6275,7 @@
           "tos_version": {
             "type": "string",
             "minLength": 1,
-            "example": "2026-11-18"
+            "example": "2026-11-20"
           },
           "intent": {
             "type": "string",
@@ -8246,7 +8246,7 @@
       "get": {
         "operationId": "deepHealthCheck",
         "summary": "Deep health check",
-        "description": "Checks the database, key-value store and quota counter. Returns per-check `ok` or `fail` only; 503 when any check fails. Cached for 30 seconds. Does not require authentication.",
+        "description": "Checks the database, key-value store, quota counter and, while sign-up without an email is on, its daily cap counter. Returns per-check `ok`, `fail` or `off` only; 503 when any check fails. Cached for 30 seconds. Does not require authentication.",
         "tags": [
           "System"
         ],
@@ -8290,12 +8290,22 @@
                             "ok",
                             "fail"
                           ]
+                        },
+                        "signup_cap": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail",
+                            "off"
+                          ],
+                          "description": "The sign-up-without-email daily cap counter. `off` while that sign-up is switched off: not checked, and never makes the status degraded."
                         }
                       },
                       "required": [
                         "db",
                         "kv",
-                        "quota_do"
+                        "quota_do",
+                        "signup_cap"
                       ]
                     }
                   },
@@ -8348,12 +8358,22 @@
                             "ok",
                             "fail"
                           ]
+                        },
+                        "signup_cap": {
+                          "type": "string",
+                          "enum": [
+                            "ok",
+                            "fail",
+                            "off"
+                          ],
+                          "description": "The sign-up-without-email daily cap counter. `off` while that sign-up is switched off: not checked, and never makes the status degraded."
                         }
                       },
                       "required": [
                         "db",
                         "kv",
-                        "quota_do"
+                        "quota_do",
+                        "signup_cap"
                       ]
                     }
                   },
