@@ -897,7 +897,7 @@
           "recurringEventId": {
             "type": "string",
             "example": "evt_01H9X4M2P5R8T6V0",
-            "description": "Present only on expanded instances (expand=true): the id of the recurring series master this instance belongs to."
+            "description": "Present only on expanded instances (expand=true listings, and series occurrences in calendar context): the id of the recurring series master this instance belongs to."
           },
           "originalStartTime": {
             "type": "string",
@@ -5729,6 +5729,110 @@
           "counter_slots",
           "message",
           "created_at"
+        ]
+      },
+      "RespondToProposalResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "rsp_abc123def456"
+          },
+          "agent_id": {
+            "type": "string",
+            "example": "agt_abc123def456"
+          },
+          "response": {
+            "type": "string",
+            "enum": [
+              "accept",
+              "decline",
+              "counter"
+            ],
+            "example": "accept"
+          },
+          "selected_slot_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "slt_abc123def456"
+          },
+          "counter_slots": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "additionalProperties": {}
+            },
+            "example": null
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": null
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-04-15T10:00:00.000Z"
+          },
+          "auto_resolved": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "confirmed",
+              "cancelled",
+              null
+            ],
+            "example": "confirmed",
+            "description": "`confirmed` or `cancelled` when this response was the last one and the proposal auto-resolved; `null` when responses are still outstanding or the auto-resolve failed."
+          },
+          "auto_resolve_error": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "event_quota_exceeded",
+                  "calendar_not_found",
+                  "agent_inactive",
+                  "conflict",
+                  "no_valid_slot",
+                  "resolve_failed"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "example": null,
+            "description": "Set when this response was the last one but the auto-resolve failed: `code` is `event_quota_exceeded`, `calendar_not_found`, `agent_inactive`, `conflict` (a concurrent change or a clash with an existing hold), `no_valid_slot` (no slot ends after it starts) or `resolve_failed`, and `message` says what to do next. The response is still saved. Usually the proposal is still `pending`: call `POST /v1/scheduling/proposals/{id}/resolve` once the cause is fixed. After `conflict` or `resolve_failed`, get the proposal first to check its status. Do not respond again (that returns 409). `null` otherwise."
+          }
+        },
+        "required": [
+          "id",
+          "agent_id",
+          "response",
+          "selected_slot_id",
+          "counter_slots",
+          "message",
+          "created_at",
+          "auto_resolved",
+          "auto_resolve_error"
         ]
       },
       "Proposal": {
@@ -12302,7 +12406,7 @@
       "get": {
         "operationId": "getCalendarContext",
         "summary": "Get calendar temporal context",
-        "description": "Returns a snapshot of the calendar's temporal state: current event, next event, recent events, and upcoming events within 24 hours. Designed for agents that need situational awareness of a calendar.",
+        "description": "Returns a snapshot of the calendar's temporal state: current event, next event, recent events, and upcoming events within 24 hours. Designed for agents that need situational awareness of a calendar. Recurring series are expanded into occurrences (with recurringEventId and originalStartTime, as in expand=true listings): occurrences that ended in the last 30 days can be recent events, and the next occurrence is looked for up to 366 days ahead. When events overlap, current_event is the most recently started.",
         "tags": [
           "Calendars"
         ],
@@ -17794,7 +17898,7 @@
       "post": {
         "operationId": "respondToProposal",
         "summary": "Respond to a scheduling proposal",
-        "description": "Submit an accept, decline, or counter response. Only agents listed in participant_agent_ids may respond. Each agent may respond exactly once. If all participants have now responded, auto-resolution runs automatically. **Requires a Developer or Pro plan.**",
+        "description": "Submit an accept, decline, or counter response. Only agents listed in participant_agent_ids may respond. Each agent may respond exactly once. If all participants have now responded, auto-resolution runs automatically. A failed auto-resolve does not fail the request: the response is saved and `auto_resolve_error` says why and what to do next (usually `POST /v1/scheduling/proposals/{id}/resolve` once the cause is fixed). **Requires a Developer or Pro plan.**",
         "tags": [
           "Scheduling"
         ],
@@ -17820,7 +17924,7 @@
         },
         "responses": {
           "200": {
-            "description": "Response recorded",
+            "description": "Response recorded, with the auto-resolve outcome",
             "headers": {
               "X-Chronary-Plan": {
                 "description": "The current plan of the authenticated organization (free | developer | pro | scale)",
@@ -17838,7 +17942,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProposalResponse"
+                  "$ref": "#/components/schemas/RespondToProposalResult"
                 }
               }
             }
@@ -17898,7 +18002,7 @@
             }
           },
           "409": {
-            "description": "Proposal is not pending, agent already responded, or (on auto-resolve) the chosen slot conflicts with an existing hold; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused) (the proposal calendar or a slot calendar; checked before the response is recorded)",
+            "description": "Proposal is not pending or agent already responded; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused) (the proposal calendar or a slot calendar; checked before the response is recorded)",
             "content": {
               "application/json": {
                 "schema": {
@@ -17908,7 +18012,7 @@
             }
           },
           "429": {
-            "description": "Rate limited, or (`quota_exceeded`, `metric: events`) the monthly event quota is used up so the resolved event cannot be created",
+            "description": "Rate limited: the per-API-key rate limit (10 requests/second per API key on Free, 25 on Developer, 50 on Pro) or the organization's combined limit across all its API keys (3x the per-key rate) was exceeded. An organization-limit 429 carries `Retry-After: 10` and `RateLimit-Policy: \"org\";q=<limit>;w=10`.",
             "content": {
               "application/json": {
                 "schema": {
@@ -18019,7 +18123,7 @@
             }
           },
           "409": {
-            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), or the chosen slot conflicts with an existing hold; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), the chosen slot conflicts with an existing hold, or no slot ends after it starts (only proposals stored before the slot-order check); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
