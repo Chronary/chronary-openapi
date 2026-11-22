@@ -2932,10 +2932,11 @@
               "session",
               "org_key",
               "agent_key",
+              "oauth_app",
               "system",
               null
             ],
-            "description": "Who acted: `session` (a console session), `org_key` (the Organization key), `agent_key` (an Agent key) or `system` (Chronary). Null on older entries that could not be attributed.",
+            "description": "Who acted: `session` (a console session), `org_key` (the Organization key), `agent_key` (an Agent key), `oauth_app` (an app connected to the hosted MCP server by signing in, such as Claude) or `system` (Chronary). Null on older entries that could not be attributed.",
             "example": "org_key"
           },
           "actor_id": {
@@ -2943,7 +2944,7 @@
               "string",
               "null"
             ],
-            "description": "API key id for a key, the organization id for a console session, null for the system.",
+            "description": "API key id for a key, the organization id for a console session, the connection id for a connected app, null for the system.",
             "example": "0b6f8c1e-3d2a-4c55-9f7e-1a2b3c4d5e6f"
           },
           "actor_label": {
@@ -2951,7 +2952,7 @@
               "string",
               "null"
             ],
-            "description": "Display name for the actor: the key label (or key prefix), the session email, or `Chronary`.",
+            "description": "Display name for the actor: the key label (or key prefix), the session email, the connected app's name, or `Chronary`.",
             "example": "Production agent key"
           },
           "agent_id": {
@@ -17031,13 +17032,14 @@
                 "session",
                 "org_key",
                 "agent_key",
+                "oauth_app",
                 "system"
               ],
-              "description": "Filter by who acted: `session`, `org_key`, `agent_key` or `system`.",
+              "description": "Filter by who acted: `session`, `org_key`, `agent_key`, `oauth_app` or `system`.",
               "example": "session"
             },
             "required": false,
-            "description": "Filter by who acted: `session`, `org_key`, `agent_key` or `system`.",
+            "description": "Filter by who acted: `session`, `org_key`, `agent_key`, `oauth_app` or `system`.",
             "name": "actor_type",
             "in": "query"
           },
@@ -17046,11 +17048,11 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 64,
-              "description": "Filter by actor id (an API key id, or the organization id for console sessions).",
+              "description": "Filter by actor id (an API key id, the organization id for console sessions, or a connected app's connection id).",
               "example": "0b6f8c1e-3d2a-4c55-9f7e-1a2b3c4d5e6f"
             },
             "required": false,
-            "description": "Filter by actor id (an API key id, or the organization id for console sessions).",
+            "description": "Filter by actor id (an API key id, the organization id for console sessions, or a connected app's connection id).",
             "name": "actor_id",
             "in": "query"
           },
