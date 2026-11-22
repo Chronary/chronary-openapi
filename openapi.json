@@ -3942,7 +3942,8 @@
           },
           "all_day": {
             "type": "boolean",
-            "default": false
+            "default": false,
+            "description": "All-day event. Stored as whole days: start_time becomes midnight UTC of the date written in start_time (in its own offset), and end_time midnight UTC after the last day it touches (exclusive; a T23:59:59 end covers that whole day), at least one day. Send e.g. start_time 2026-07-04T00:00:00Z and end_time 2026-07-05T00:00:00Z for 4 July. Availability and conflict checks treat an all-day event as busy for those whole UTC days; for a local-day block, use a timed event."
           },
           "status": {
             "type": "string",
@@ -4020,7 +4021,8 @@
             "format": "date-time"
           },
           "all_day": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "All-day event. Stored as whole days: start_time becomes midnight UTC of the date written in start_time (in its own offset), and end_time midnight UTC after the last day it touches (exclusive; a T23:59:59 end covers that whole day), at least one day. Send e.g. start_time 2026-07-04T00:00:00Z and end_time 2026-07-05T00:00:00Z for 4 July. Availability and conflict checks treat an all-day event as busy for those whole UTC days; for a local-day block, use a timed event. Setting true on a timed event widens it to the day(s) it covers. Moving one bound of an all-day event snaps only that bound and keeps the other. When moving an all-day event with a non-UTC offset, also send all_day: true so the written date is kept."
           },
           "status": {
             "type": "string",
@@ -12253,7 +12255,7 @@
       "delete": {
         "operationId": "deleteCalendar",
         "summary": "Delete a calendar",
-        "description": "Deletes a calendar and all its events.",
+        "description": "Deletes a calendar, all its events and its booking pages (their public links stop resolving).",
         "tags": [
           "Calendars"
         ],
@@ -15309,7 +15311,7 @@
       "post": {
         "operationId": "createWebhook",
         "summary": "Create a webhook",
-        "description": "Registers a new webhook endpoint. Chronary will deliver signed POST requests to your URL when subscribed events occur. The signing secret is returned only at creation time — store it securely.",
+        "description": "Registers a new webhook endpoint. Chronary will deliver signed POST requests to your URL when subscribed events occur. The signing secret is returned only at creation time — store it securely. Honors `Idempotency-Key`: a retry after the first request finished replays its 201, secret included.",
         "tags": [
           "Webhooks"
         ],
@@ -15356,6 +15358,16 @@
           },
           "403": {
             "description": "Forbidden: operation not permitted (an Agent key), or `anonymous_org_restricted` (a claimable organization cannot create webhook endpoints until it is claimed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict: `webhook_endpoint_cap` (the plan limit is reached; body carries metric, limit, upgrade_url or contact_url, docs_url), or `idempotency_conflict` (an earlier request with this Idempotency-Key created the webhook and is still running or never finished; the message names the webhook. Retry with the same Idempotency-Key once it finishes to get the stored response, or delete the webhook).",
             "content": {
               "application/json": {
                 "schema": {
@@ -17270,7 +17282,7 @@
             }
           },
           "409": {
-            "description": "Conflict: scoped_keys_cap (body carries metric, limit, upgrade_url or contact_url, docs_url) or agent_inactive (the agent is decommissioned).",
+            "description": "Conflict: scoped_keys_cap (body carries metric, limit, upgrade_url or contact_url, docs_url), agent_inactive (the agent is decommissioned), or idempotency_conflict (an earlier request with this Idempotency-Key created the key and is still running or never finished; the message names the key. Retry with the same Idempotency-Key once it finishes to get the stored response, or revoke the key).",
             "content": {
               "application/json": {
                 "schema": {
