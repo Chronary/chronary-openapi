@@ -5823,7 +5823,7 @@
               "message"
             ],
             "example": null,
-            "description": "Set when this response was the last one but the auto-resolve failed: `code` is `event_quota_exceeded`, `calendar_not_found`, `agent_inactive`, `conflict` (a concurrent change or a clash with an existing hold), `no_valid_slot` (no slot ends after it starts) or `resolve_failed`, and `message` says what to do next. The response is still saved. Usually the proposal is still `pending`: call `POST /v1/scheduling/proposals/{id}/resolve` once the cause is fixed. After `conflict` or `resolve_failed`, get the proposal first to check its status. Do not respond again (that returns 409). `null` otherwise."
+            "description": "Set when this response was the last one but the auto-resolve failed: `code` is `event_quota_exceeded`, `calendar_not_found`, `agent_inactive`, `conflict` (a concurrent change to the proposal), `no_valid_slot` (no slot ends after it starts) or `resolve_failed`, and `message` says what to do next. The response is still saved. Usually the proposal is still `pending`: call `POST /v1/scheduling/proposals/{id}/resolve` once the cause is fixed. After `conflict` or `resolve_failed`, get the proposal first to check its status. Do not respond again (that returns 409). `null` otherwise."
           }
         },
         "required": [
@@ -7396,6 +7396,11 @@
               "reauthorization_required",
               "disconnected"
             ]
+          },
+          "grants_deactivated": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Only when the request set selected_external_calendar_ids: how many availability grants were switched off because every calendar they named was deselected. Deselected calendars are removed from every grant that names them; such a grant is kept, inactive, until a calendar is added and it is re-enabled."
           }
         },
         "required": [
@@ -8687,7 +8692,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -10576,7 +10581,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -10944,7 +10949,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -11046,7 +11051,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -11277,7 +11282,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -11435,7 +11440,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -11718,7 +11723,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -11821,7 +11826,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -12046,7 +12051,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -12544,7 +12549,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13059,7 +13064,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13158,7 +13163,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13661,7 +13666,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14488,7 +14493,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14596,7 +14601,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14716,7 +14721,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -15809,7 +15814,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -15905,7 +15910,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16010,7 +16015,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16607,7 +16612,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16702,7 +16707,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16787,7 +16792,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -16944,7 +16949,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -18137,7 +18142,7 @@
             }
           },
           "409": {
-            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), the chosen slot conflicts with an existing hold, or no slot ends after it starts (only proposals stored before the slot-order check); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), or no slot ends after it starts (only proposals stored before the slot-order check); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -19024,7 +19029,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -19109,7 +19114,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -19220,6 +19225,7 @@
             "SessionAuth": []
           }
         ],
+        "description": "Updates the availability calendars and capabilities of a connection. A calendar left out of `selected_external_calendar_ids` stops being an availability source and is removed from every availability grant that names it, in the same write; a grant left with no calendar is switched off (kept, not deleted) and counted in `grants_deactivated`.",
         "parameters": [
           {
             "schema": {
@@ -20257,7 +20263,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -20545,7 +20551,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -20712,7 +20718,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -20777,7 +20783,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -20857,7 +20863,7 @@
             }
           },
           "403": {
-            "description": "Forbidden — quota exceeded or operation not permitted",
+            "description": "Forbidden — the key is not allowed to do this (`forbidden`), or the plan does not include the feature (`plan_required`)",
             "content": {
               "application/json": {
                 "schema": {
