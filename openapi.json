@@ -1482,7 +1482,7 @@
             ],
             "format": "date-time",
             "example": null,
-            "description": "While a secret rotation's grace window is open, when the replaced signing secret stops working; until then every delivery also carries `X-Signature-Previous` signed with it. Null when no grace window is open. The secrets themselves are never returned here."
+            "description": "While a secret rotation's grace window is open, when the replaced signing secret stops working; until then every delivery also carries `X-Signature-V2-Previous` and `X-Signature-Previous` signed with it. Null when no grace window is open. The secrets themselves are never returned here."
           },
           "createdAt": {
             "type": "string",
@@ -2020,7 +2020,7 @@
               "x-delivery-id",
               "x-chronary-event-type"
             ],
-            "description": "The stable request headers. X-Signature, X-Signature-Previous and X-Timestamp change on every attempt and are not stored.",
+            "description": "The stable request headers. X-Signature-V2, X-Signature-V2-Previous, X-Signature, X-Signature-Previous and X-Timestamp change on every attempt and are not stored.",
             "example": {
               "content-type": "application/json",
               "x-delivery-id": "whd_01H9X4M2P5R8T6V0",
@@ -2270,7 +2270,7 @@
             ],
             "format": "date-time",
             "example": "2026-11-05T10:00:00.000Z",
-            "description": "When the replaced secret stops working. Until then deliveries carry `X-Signature` (new secret) and `X-Signature-Previous` (replaced secret). Null when `expire_old_in` was `now`."
+            "description": "When the replaced secret stops working. Until then deliveries carry `X-Signature-V2` and `X-Signature` (new secret) and `X-Signature-V2-Previous` and `X-Signature-Previous` (replaced secret). Null when `expire_old_in` was `now`."
           }
         },
         "required": [
@@ -3205,7 +3205,8 @@
           "name": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "type": {
             "type": "string",
@@ -3235,7 +3236,8 @@
           "name": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "description": {
             "type": [
@@ -3335,7 +3337,8 @@
           "name": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "timezone": {
             "type": "string",
@@ -3379,7 +3382,8 @@
           "name": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "timezone": {
             "type": "string",
@@ -3493,7 +3497,8 @@
           "title": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "description": {
             "type": "string",
@@ -3672,7 +3677,8 @@
           "title": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "description": {
             "type": [
@@ -3886,7 +3892,8 @@
           "name": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 200
+            "maxLength": 200,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "email": {
             "type": "string",
@@ -4771,7 +4778,8 @@
           "label": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 100
+            "maxLength": 100,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "expires_in": {
             "type": "string",
@@ -4805,7 +4813,8 @@
           "label": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           }
         },
         "required": [
@@ -4819,7 +4828,8 @@
           "label": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 255
+            "maxLength": 255,
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "url": {
             "type": "string",
@@ -6163,7 +6173,8 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "example": "Support Agent"
+            "example": "Support Agent",
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "tos_version": {
             "type": "string",
@@ -6292,7 +6303,8 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "example": "Support Agent"
+            "example": "Support Agent",
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "tos_version": {
             "type": "string",
@@ -6377,7 +6389,8 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 100,
-            "example": "Acme AI"
+            "example": "Acme AI",
+            "description": "Normalized before it is stored: invisible format characters (zero-width space, bidi controls, soft hyphen; zero-width joiner and non-joiner are kept) removed, Unicode NFC, every run of whitespace (including tabs, newlines and non-breaking spaces) replaced by one space, and the ends trimmed. The length limits apply to the normalized value; a name with no visible character, or one that contains a control character, is rejected with 400."
           },
           "tos_version": {
             "type": "string",
@@ -13209,7 +13222,7 @@
       "get": {
         "operationId": "getBookingPageHosted",
         "summary": "Hosted booking page (HTML)",
-        "description": "Public, server-rendered HTML scheduling page. No authentication — the unguessable slug is the credential. Pass `?slot=<ISO>` to render the confirmation form for a chosen slot.",
+        "description": "Public, server-rendered HTML scheduling page. No authentication — the unguessable slug is the credential. The picker shows up to 120 slots a page, ending on a whole day where it can, with a link to later times; pass `?from=<ISO>` to start the picker at that instant (a past or malformed value shows the first page). Pass `?slot=<ISO>` to render the confirmation form for a chosen slot.",
         "tags": [
           "Booking Pages"
         ],
@@ -13233,6 +13246,15 @@
             },
             "required": false,
             "name": "slot",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "name": "from",
             "in": "query"
           }
         ],
@@ -15956,7 +15978,7 @@
       "post": {
         "operationId": "sendTestWebhook",
         "summary": "Send a test event",
-        "description": "Sends a signed sample payload of one event type to the endpoint. The delivery is marked `is_test`, carries the `X-Chronary-Test: 1` header, makes one attempt and is sent even when the endpoint is paused or disabled. It does not count toward the monthly delivery quota and never affects the circuit breaker. Poll `GET /v1/webhooks/{id}/deliveries/{delivery_id}` for the result. The endpoint must subscribe to the event type. Limited to 10 per minute per organization. Requires an org-level API key; agent-scoped keys receive 403.",
+        "description": "Sends a signed sample payload of one event type to the endpoint. The delivery is marked `is_test`, carries the `X-Chronary-Test: 1` header (covered by `X-Signature-V2`), makes one attempt and is sent even when the endpoint is paused or disabled. It does not count toward the monthly delivery quota and never affects the circuit breaker. Poll `GET /v1/webhooks/{id}/deliveries/{delivery_id}` for the result. The endpoint must subscribe to the event type. Limited to 10 per minute per organization. Requires an org-level API key; agent-scoped keys receive 403.",
         "tags": [
           "Webhooks"
         ],
@@ -16061,7 +16083,7 @@
       "post": {
         "operationId": "replayWebhookDelivery",
         "summary": "Replay a webhook delivery",
-        "description": "Sends a `failed` or `dropped` delivery again as a **new** delivery with its own `delivery_id`; the original delivery and its attempts are not changed. The stored payload goes out unchanged (same event id), signed per attempt with the endpoint's current secret and sent to its current URL, with an `X-Chronary-Replay-Of` header naming the first delivery of the chain (the original, even when a replay is replayed). The replay follows the plan's normal retry schedule, counts toward the circuit breaker and counts toward the monthly `webhook_deliveries` quota (paid plans past the limit are still served, with `RateLimit-Soft-Exceeded: true`). Pending, delivered and test deliveries cannot be replayed, the endpoint must be active, and the payload must still be stored (30 days). Poll `GET /v1/webhooks/{id}/deliveries/{delivery_id}` with the new id for the result. Honors `Idempotency-Key`. Limited to 30 per minute per organization. Requires a Developer or Pro plan and an org-level API key; agent-scoped keys receive 403.",
+        "description": "Sends a `failed` or `dropped` delivery again as a **new** delivery with its own `delivery_id`; the original delivery and its attempts are not changed. The stored payload goes out unchanged (same event id), signed per attempt with the endpoint's current secret and sent to its current URL, with an `X-Chronary-Replay-Of` header (covered by `X-Signature-V2`) naming the first delivery of the chain (the original, even when a replay is replayed). The replay follows the plan's normal retry schedule, counts toward the circuit breaker and counts toward the monthly `webhook_deliveries` quota (paid plans past the limit are still served, with `RateLimit-Soft-Exceeded: true`). Pending, delivered and test deliveries cannot be replayed, the endpoint must be active, and the payload must still be stored (30 days). Poll `GET /v1/webhooks/{id}/deliveries/{delivery_id}` with the new id for the result. Honors `Idempotency-Key`. Limited to 30 per minute per organization. Requires a Developer or Pro plan and an org-level API key; agent-scoped keys receive 403.",
         "tags": [
           "Webhooks"
         ],
@@ -16189,7 +16211,7 @@
       "post": {
         "operationId": "rotateWebhookSecret",
         "summary": "Rotate the signing secret",
-        "description": "Generates a new signing secret and returns it once. The new secret signs `X-Signature` from the next delivery attempt, including retries and test events already queued. The replaced secret keeps signing `X-Signature-Previous` (same format, same `X-Timestamp`) until `expire_old_in` has passed, so a receiver can switch secrets without rejecting deliveries; `now` drops it at once. `expire_old_in` is `now`, `1h`, `24h` (default) or `7d`. Rotating again inside a grace window replaces the previous secret, so at most two secrets are valid at a time. Works on paused and disabled endpoints and never changes `active`. An `Idempotency-Key` replay within 24 hours returns the same new secret. **Requires a Developer or Pro plan** and an org-level API key (agent-scoped keys receive 403); a console session must have signed in within the last 5 minutes.",
+        "description": "Generates a new signing secret and returns it once. The new secret signs `X-Signature-V2` and `X-Signature` from the next delivery attempt, including retries and test events already queued. The replaced secret keeps signing `X-Signature-V2-Previous` and `X-Signature-Previous` (same format, same `X-Timestamp`) until `expire_old_in` has passed, so a receiver can switch secrets without rejecting deliveries; `now` drops it at once. `expire_old_in` is `now`, `1h`, `24h` (default) or `7d`. Rotating again inside a grace window replaces the previous secret, so at most two secrets are valid at a time. Works on paused and disabled endpoints and never changes `active`. An `Idempotency-Key` replay within 24 hours returns the same new secret. **Requires a Developer or Pro plan** and an org-level API key (agent-scoped keys receive 403); a console session must have signed in within the last 5 minutes.",
         "tags": [
           "Webhooks"
         ],
