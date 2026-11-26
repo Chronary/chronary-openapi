@@ -941,13 +941,13 @@
               "status": {
                 "type": "string",
                 "example": "not_configured",
-                "description": "not_configured | queued | published | skipped | failed"
+                "description": "not_configured (no publishing destination) | not_eligible (the event in this state has no copy: cancelled, deleted, a hold, a recurring series, or tentative under the `confirmed` policy) | pending (a provider write is queued) | failed | disconnected"
               }
             },
             "required": [
               "status"
             ],
-            "description": "Present only on create/update/hold mutation responses — the outcome of publishing this event to a connected human calendar (opt-in). Absent on read/list responses."
+            "description": "Present only on create, update, confirm and release responses — the outcome of publishing this event to a connected human calendar (opt-in). A confirmed event shows as Busy; a tentative event is published as Tentative only under the `confirmed_tentative` policy. Cancelling the event, or changing it to a state that is not published, removes the copy. Absent on read/list responses."
           },
           "deletedAt": {
             "type": [
@@ -3297,7 +3297,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Search: a case-insensitive substring of the agent name, or an exact agent id"
+            "description": "Search: a case-insensitive substring of the agent name, or an exact agent id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed"
           },
           "sort": {
             "type": "string",
@@ -3445,7 +3445,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id"
+            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed"
           },
           "cursor": {
             "type": "string",
@@ -3477,7 +3477,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id"
+            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed"
           },
           "cursor": {
             "type": "string",
@@ -4198,7 +4198,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 100,
-            "description": "Case-insensitive title search. Requires start_after and start_before at most 31 days apart"
+            "description": "Case-insensitive title search. Requires start_after and start_before at most 31 days apart. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed; titles are compared in the same normal form"
           },
           "cursor": {
             "type": "string",
@@ -7437,6 +7437,19 @@
           },
           "refreshed": {
             "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "recently_refreshed",
+              "provider_backoff"
+            ],
+            "description": "Only when `refreshed` is false: `recently_refreshed` (refreshed less than 60 seconds ago) or `provider_backoff` (the provider is limiting requests for this account; Chronary retries no earlier than `retry_at`)."
+          },
+          "retry_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Only when `reason` is `provider_backoff`: when the backoff window ends (up to 4 hours away). Chronary calls the provider again on its next scheduled refresh after this time, so a refresh can land a little later."
           }
         },
         "required": [
@@ -10430,10 +10443,10 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 100,
-              "description": "Search: a case-insensitive substring of the agent name, or an exact agent id"
+              "description": "Search: a case-insensitive substring of the agent name, or an exact agent id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed"
             },
             "required": false,
-            "description": "Search: a case-insensitive substring of the agent name, or an exact agent id",
+            "description": "Search: a case-insensitive substring of the agent name, or an exact agent id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed",
             "name": "q",
             "in": "query"
           },
@@ -10910,10 +10923,10 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 100,
-              "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id"
+              "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed"
             },
             "required": false,
-            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id",
+            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed",
             "name": "q",
             "in": "query"
           },
@@ -11243,10 +11256,10 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 100,
-              "description": "Case-insensitive title search. Requires start_after and start_before at most 31 days apart"
+              "description": "Case-insensitive title search. Requires start_after and start_before at most 31 days apart. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed; titles are compared in the same normal form"
             },
             "required": false,
-            "description": "Case-insensitive title search. Requires start_after and start_before at most 31 days apart",
+            "description": "Case-insensitive title search. Requires start_after and start_before at most 31 days apart. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed; titles are compared in the same normal form",
             "name": "q",
             "in": "query"
           },
@@ -11942,10 +11955,10 @@
               "type": "string",
               "minLength": 1,
               "maxLength": 100,
-              "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id"
+              "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed"
             },
             "required": false,
-            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id",
+            "description": "Search: a case-insensitive substring of the calendar name, or an exact calendar id. Normalized like a stored name before matching: invisible format characters removed, Unicode NFC, whitespace runs collapsed to one space, ends trimmed",
             "name": "q",
             "in": "query"
           },
@@ -14799,7 +14812,7 @@
       "put": {
         "operationId": "confirmEvent",
         "summary": "Confirm a held event",
-        "description": "Promotes an event from `status=\"hold\"` to `status=\"confirmed\"`. The hold must still be active (not past `hold_expires_at`). After confirmation, `event.started` and `event.ended` lifecycle webhooks fire at the scheduled times, and the `event.hold_confirmed` webhook fires immediately.",
+        "description": "Promotes an event from `status=\"hold\"` to `status=\"confirmed\"`. The hold must still be active (not past `hold_expires_at`). After confirmation, `event.started` and `event.ended` lifecycle webhooks fire at the scheduled times, and the `event.hold_confirmed` webhook fires immediately. When the calendar publishes to a connected human calendar, the confirmed event is published now; the response carries `external_sync`.",
         "tags": [
           "Events"
         ],
@@ -14922,7 +14935,7 @@
       "put": {
         "operationId": "releaseEvent",
         "summary": "Release a held event",
-        "description": "Manually releases an event with `status=\"hold\"` before its `hold_expires_at`. Frees the slot for other agents. Fires the `event.hold_released` webhook. Available on every plan (creating and confirming holds requires a Developer or Pro plan).",
+        "description": "Manually releases an event with `status=\"hold\"` before its `hold_expires_at`. Frees the slot for other agents. Fires the `event.hold_released` webhook. The response carries `external_sync`; a hold is never published, so there is no copy to remove. Available on every plan (creating and confirming holds requires a Developer or Pro plan).",
         "tags": [
           "Events"
         ],
@@ -19336,7 +19349,7 @@
             "SessionAuth": []
           }
         ],
-        "description": "Disconnect a calendar account. Removes its availability mappings and publishing destinations, and deletes what Chronary stored for it: access and refresh tokens, the account email, provider identifiers, calendar names, busy times and sync state. Google access is revoked at Google, unless another live connection uses the same Google account. Microsoft has no revoke Chronary can call, so the person removes access in their Microsoft account settings. Events already published to that calendar stay there. Requires the X-Chronary-CSRF header.",
+        "description": "Disconnect a calendar account. Removes its availability mappings and publishing destinations, and deletes what Chronary stored for it: access and refresh tokens, the account email, provider identifiers, calendar names, busy times and sync state. Google access is revoked at Google, unless another live connection uses the same Google account. Microsoft has no revoke Chronary can call, so the person removes access in their Microsoft account settings. Events Chronary published to that calendar are removed first (as many as fit in the request; the rest stay). Requires the X-Chronary-CSRF header.",
         "parameters": [
           {
             "schema": {
@@ -19420,7 +19433,7 @@
             "SessionAuth": []
           }
         ],
-        "description": "Refreshes busy times from the provider now. At most one provider refresh per connection per 60 seconds: a call inside that window answers 202 with `refreshed: false` and makes no provider call. Requires the X-Chronary-CSRF header.",
+        "description": "Refreshes busy times from the provider now. At most one provider refresh per connection per 60 seconds: a call inside that window answers 202 with `refreshed: false`, `reason: \"recently_refreshed\"` and makes no provider call. While the provider is limiting requests for the account, a call answers 202 with `refreshed: false`, `reason: \"provider_backoff\"` and `retry_at`, and makes no provider call. Requires the X-Chronary-CSRF header.",
         "parameters": [
           {
             "schema": {
@@ -19433,7 +19446,7 @@
         ],
         "responses": {
           "202": {
-            "description": "Refresh completed, or skipped (`refreshed: false`) because the connection was refreshed less than 60 seconds ago",
+            "description": "Refresh completed, or skipped (`refreshed: false`): the connection was refreshed less than 60 seconds ago, or the provider is limiting requests for it (`reason`)",
             "content": {
               "application/json": {
                 "schema": {
@@ -20422,6 +20435,7 @@
             "SessionAuth": []
           }
         ],
+        "description": "Set or replace the publishing destination. Replacing it with another calendar moves the events already published: they are removed from the old calendar and published to the new one within a few minutes. A policy-only change keeps them in place.",
         "parameters": [
           {
             "schema": {
@@ -20511,6 +20525,7 @@
             "SessionAuth": []
           }
         ],
+        "description": "Remove the publishing destination. Events already published to it are removed within a few minutes.",
         "parameters": [
           {
             "schema": {
