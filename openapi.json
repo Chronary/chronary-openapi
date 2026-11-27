@@ -91,6 +91,21 @@
               "retry_after": {
                 "type": "integer",
                 "description": "Seconds until the request may be retried"
+              },
+              "code": {
+                "type": "string",
+                "example": "event_conflict",
+                "description": "conflict: the specific reason. `event_conflict` (the calendar refuses overlapping events and this time is taken), `recurring_on_protected_calendar`, `calendar_has_overlaps`, `calendar_has_recurring_series`."
+              },
+              "conflicting_event_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "example": [
+                  "evt_01H9X4M2P5R8T6V0"
+                ],
+                "description": "event_conflict, calendar_has_overlaps, calendar_has_recurring_series: the events in the way: at most 10 for event_conflict, up to 50 for calendar_has_overlaps (the events of at most 25 overlapping pairs), at most 25 for calendar_has_recurring_series"
               }
             },
             "required": [
@@ -321,6 +336,11 @@
             ],
             "description": "Default reminder offsets (minutes before start) inherited by events that don't set their own. null = use the system default (10 min); [] = no reminders."
           },
+          "prevent_overlaps": {
+            "type": "boolean",
+            "example": false,
+            "description": "Double-booking guarantee: when true, the calendar refuses any create, reschedule, reactivation or hold confirm that would overlap an active event on it (409 `event_conflict`), and refuses recurring series. Holds that have expired never block. Imported iCal events are not covered."
+          },
           "ical_url": {
             "type": "string",
             "format": "uri",
@@ -341,6 +361,7 @@
           "updatedAt",
           "agent_status",
           "default_reminders",
+          "prevent_overlaps",
           "ical_url"
         ]
       },
@@ -3366,6 +3387,9 @@
             },
             "maxItems": 5
           },
+          "prevent_overlaps": {
+            "type": "boolean"
+          },
           "metadata": {
             "type": "object",
             "additionalProperties": {}
@@ -3410,6 +3434,9 @@
               "maximum": 40320
             },
             "maxItems": 5
+          },
+          "prevent_overlaps": {
+            "type": "boolean"
           },
           "metadata": {
             "type": "object",
@@ -5008,6 +5035,25 @@
                 ],
                 "format": "date-time"
               },
+              "heard_about": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "heard_about_detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "heard_about_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
               "accepted_terms_version": {
                 "type": [
                   "string",
@@ -5041,6 +5087,9 @@
               "oauth_provider_id",
               "email_verified",
               "onboarding_completed_at",
+              "heard_about",
+              "heard_about_detail",
+              "heard_about_at",
               "accepted_terms_version",
               "accepted_terms_at",
               "created_at",
@@ -6180,6 +6229,11 @@
             "type": "string",
             "minLength": 1,
             "example": "2026-11-20"
+          },
+          "heard_about": {
+            "type": "string",
+            "example": "My user asked me to find a calendar API for agents; I found Chronary in a web search.",
+            "description": "Optional. How you (or your user) found Chronary, in plain text. Control characters and invisible formatting characters (such as bidi controls) are removed, whitespace is collapsed, and the result is cut to 200 characters (a longer answer is never refused). Stored for a new organization only and never returned by the API."
           }
         },
         "required": [
@@ -12253,7 +12307,7 @@
             }
           },
           "409": {
-            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "Turning `prevent_overlaps` on was refused: the calendar holds overlapping active events (`code: calendar_has_overlaps`) or a running recurring series (`code: calendar_has_recurring_series`), listed in `conflicting_event_ids`; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13721,7 +13775,7 @@
             }
           },
           "409": {
-            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "The calendar refuses overlapping events (`prevent_overlaps`) and this time overlaps an active event (`code: event_conflict`, with `conflicting_event_ids`), or it cannot hold a recurring series (`code: recurring_on_protected_calendar`); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -13919,7 +13973,7 @@
             }
           },
           "409": {
-            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "The calendar refuses overlapping events (`prevent_overlaps`) and this time overlaps an active event (`code: event_conflict`, with `conflicting_event_ids`), or it cannot hold a recurring series (`code: recurring_on_protected_calendar`); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14656,7 +14710,7 @@
             }
           },
           "409": {
-            "description": "`agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "The calendar refuses overlapping events (`prevent_overlaps`) and this time overlaps an active event (`code: event_conflict`, with `conflicting_event_ids`), or it cannot hold a recurring series (`code: recurring_on_protected_calendar`); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -14899,7 +14953,7 @@
             }
           },
           "409": {
-            "description": "Event is not a hold, or the hold has already expired; or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "Event is not a hold, or the hold has already expired; or the calendar refuses overlapping events and another active event overlaps the hold (`code: event_conflict`); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -18177,7 +18231,7 @@
             }
           },
           "409": {
-            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), or no slot ends after it starts (only proposals stored before the slot-order check); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
+            "description": "Proposal is not in a pending state (including `resolving` while another resolve runs), or no slot ends after it starts (only proposals stored before the slot-order check); or the winning slot's calendar refuses overlapping events and the slot is taken (`code: event_conflict`, the proposal stays pending); or `agent_inactive`: the calendar belongs to a decommissioned agent and is read-only until the agent is restored (PATCH /v1/agents/{id}, status active or paused)",
             "content": {
               "application/json": {
                 "schema": {
@@ -19260,7 +19314,7 @@
             "SessionAuth": []
           }
         ],
-        "description": "Updates the availability calendars and capabilities of a connection. A calendar left out of `selected_external_calendar_ids` stops being an availability source and is removed from every availability grant that names it, in the same write; a grant left with no calendar is switched off (kept, not deleted) and counted in `grants_deactivated`.",
+        "description": "Updates the availability calendars and capabilities of a connection. A calendar left out of `selected_external_calendar_ids` stops being an availability source and is removed from every availability grant that names it, in the same write; a grant left with no calendar is switched off (kept, not deleted) and counted in `grants_deactivated`. `capabilities` without `publishing` turns publishing off. If the connection is active and its grant still allows writing, the events Chronary already published through it are removed from the provider calendar within a few minutes; otherwise they stay, and the person can delete them in their calendar. Its publishing destinations are kept, so once publishing is turned back on, events are published again as they are created or changed.",
         "parameters": [
           {
             "schema": {
@@ -19499,6 +19553,7 @@
             "SessionAuth": []
           }
         ],
+        "description": "Starts a new provider authorization for the connection. Without `capabilities` it keeps the connection's capabilities. With `capabilities` they replace the connection's once the authorization completes; leaving out `publishing` turns publishing off, as the update does. Connecting an account that is already connected only adds capabilities.",
         "parameters": [
           {
             "schema": {
